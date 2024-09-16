@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %} Logout {% endblock %}
+
+{% block header1 %}
+  <h1>Pagina di Logout</h1>
+{% endblock %}
+
+{% block content %} 
+
+Logout eseguito con successo <br>
+Ci vediamo presto! <br>
+<a href="{% url 'accounts:home_accounts' %}">homepage</a>
+{% endblock %}
+
+{% block footer %} {% endblock %}

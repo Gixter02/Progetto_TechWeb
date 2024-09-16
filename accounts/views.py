@@ -8,7 +8,7 @@ from accounts.models import RegitratoUtente
 
 # Create your views here.
 def home_accounts(request):
-    render(request, template_name= "accounts/base.html", context={})
+    return render(request, template_name= "accounts/home.html")
 
 class ListaUtentiView(ListView):
     model = RegitratoUtente
