@@ -1,0 +1,15 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %} Dump del DB Utenti {% endblock %}
+
+{% block content %}
+
+    {% for p in object_list %}
+
+        <ul>
+            {{ p }}
+        </ul>
+
+    {% endfor %}
+
+{% endblock %}
