@@ -1,8 +1,10 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
 
-class Utente(models.Model):
+class RegitratoUtente(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
     cognome = models.CharField(max_length=100)
     data_nascita = models.DateField()
@@ -19,7 +21,8 @@ class Utente(models.Model):
     preferenze = models.CharField(max_length=2, choices=SCELTA_PREFERENZE)
 
     def __str__(self):
-        return self.nome + self.cognome + " nato il " + str(self.data_nascita) + "\nPreferenze: " + self.preferenze + "\nBIO: " + self.bio
+        return self.nome + " " + self.cognome + " nato il " + str(
+            self.data_nascita) + "\nPreferenze: " + self.preferenze + "\nBIO: " + self.bio
 
     class Meta:
-        verbose_name_plural = "Utenti"
+        verbose_name_plural = "UtentiRegistrati"

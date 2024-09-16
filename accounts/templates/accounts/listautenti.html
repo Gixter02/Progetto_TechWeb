@@ -3,12 +3,14 @@
 {% block title %} Dump del DB Utenti {% endblock %}
 
 {% block content %}
-
+    {% block header1 %}
+  <h1>Lista degli utenti</h1>
+{% endblock %}
     {% for p in object_list %}
 
-        <ul>
+        <li>
             {{ p }}
-        </ul>
+        </li>
 
     {% endfor %}
 
