@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 
-class RegitratoUtente(models.Model):
+class RegistratoUtente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nome = models.CharField(max_length=100)
     cognome = models.CharField(max_length=100)
