@@ -9,7 +9,7 @@ from .froms import RegistratoUtenteForm
 
 # Create your views here.
 def home_accounts(request):
-    return render(request, template_name= "accounts/home.html")
+    return render(request, template_name= "accounts/home_page.html")
 
 class ListaUtentiView(ListView):
     model = RegistratoUtente

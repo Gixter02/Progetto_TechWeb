@@ -1,16 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %} Logout {% endblock %}
+{% block title %}Logout Effettuato{% endblock %}
 
-{% block header1 %}
-  <h1>Pagina di Logout</h1>
-{% endblock %}
+{% block content %}
+    <div class="logout-success-container">
+        <h1>Logout effettuato con successo</h1>
 
-{% block content %} 
+        <p>Hai effettuato il logout dal tuo account. Grazie per aver visitato la nostra palestra!</p>
 
-Logout eseguito con successo <br>
-Ci vediamo presto! <br>
-<a href="{% url 'accounts:home_accounts' %}">homepage</a>
+        <a href="{% url 'accounts:home_accounts' %}" class="btn btn-primary">Torna alla Homepage</a>
+    </div>
 {% endblock %}
 
 {% block footer %} {% endblock %}

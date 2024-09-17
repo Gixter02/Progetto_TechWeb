@@ -1,0 +1,61 @@
+{% extends "accounts/base.html" %}
+
+{% block title %} Homepage Palestra {% endblock %}
+
+{% block content %}
+    <div class="homepage-container">
+        {% block header1 %}
+        <h1>Benvenuto nella Nostra Palestra!</h1>
+        <p>Il tuo luogo ideale per raggiungere i tuoi obiettivi di fitness.</p>
+        
+        {% if not user.is_authenticated %}
+        <p>Non sei autenticato. Accedi per gestire il tuo profilo e scoprire tutte le nostre attività.</p>
+        <form method="POST" action="{% url 'accounts:login' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <p>Non hai un account? <a href="{% url 'accounts:creautente' %}">Registrati qui</a>.</p>
+        {% endif %}
+        {% endblock %}
+        
+        {% if user.is_authenticated and "ok" in request.GET.login %}
+        <div class="alert alert-success">
+            La procedura di login è andata a buon fine! Benvenuto/a, {{ user.username }}.
+        </div>
+
+        <div class="user-options">
+            <h3>Le tue opzioni:</h3>
+            <ul>
+                <li>Visualizza il tuo profilo</li>
+                <li>Scopri i programmi di allenamento</li>
+                <li>Eventi e lezioni in arrivo</li>
+            </ul>
+        </div>
+
+        <form method="POST" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+        {% endif %}
+        
+        {% if user.is_authenticated and not "ok" in request.GET.login %}
+        <div class="alert alert-info">
+            Sei già autenticato/a, {{ user.username }}.
+        </div>
+
+        <div class="user-options">
+            <h3>Esplora:</h3>
+            <ul>
+                <li>Programmi di allenamento</li>
+                <li>Guide nutrizionali</li>
+                <li>Eventi e lezioni</li>
+            </ul>
+        </div>
+
+        <form method="POST" action="{% url 'accounts:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+        {% endif %}
+    </div>
+{% endblock %}
