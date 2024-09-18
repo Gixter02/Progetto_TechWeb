@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DetailView, TemplateView
+from django.views.generic import CreateView, UpdateView, DetailView, TemplateView, ListView
 from .models import PersonalTrainer
 from .forms import PersonalTrainerForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -51,3 +51,7 @@ class PersonalTrainerHomeView(TemplateView):
         except PersonalTrainer.DoesNotExist:
             context['personal_trainer'] = None
         return context
+
+class PersonalTrainerListView(ListView):
+    model = PersonalTrainer
+    template_name = 'trainers/personal_trainer_list.html'
