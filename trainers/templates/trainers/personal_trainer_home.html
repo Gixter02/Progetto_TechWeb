@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Benvenuto nella tua Dashboard, {{ personal_trainer.nome }}!</h1>
+
+        {% if personal_trainer %}
+            <div class="row">
+                <div class="col-md-4">
+                    {% if personal_trainer.immagine_profilo %}
+                        <img src="{{ personal_trainer.immagine_profilo.url }}" alt="Immagine profilo" class="img-fluid rounded" style="max-width: 100%;">
+                    {% else %}
+                        <img src="{% static 'imgs/mia_foto.jpeg'%}" alt="Immagine profilo" class="img-fluid rounded" style="max-width: 100%;">
+                    {% endif %}
+                </div>
+
+                <div class="col-md-8">
+                    <p><strong>Nome:</strong> {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</p>
+                    <p><strong>Data di Nascita:</strong> {{ personal_trainer.data_di_nascita }}</p>
+                    <p><strong>Preferenza:</strong> {{ personal_trainer.get_preferenze_display }}</p>
+                    <p><strong>Bio:</strong> {{ personal_trainer.bio }}</p>
+                    <p><strong>Competenze:</strong> {{ personal_trainer.competenze }}</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="mt-4">
+                <a href="{% url 'trainers:personal_trainer_update' pk=personal_trainer.pk %}" class="btn btn-primary">Modifica il tuo profilo</a>
+            </div>
+        {% else %}
+            <p>Non hai ancora creato il tuo profilo da personal trainer. <a href="{% url 'trainers:personal_trainer_create' %}">Clicca qui</a> per creare il tuo profilo.</p>
+        {% endif %}
+    </div>
+{% endblock %}

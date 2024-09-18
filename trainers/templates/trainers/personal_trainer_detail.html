@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>{{ object.nome }} {{ object.cognome }}</h1>
+    <p><strong>Data di Nascita:</strong> {{ object.data_di_nascita }}</p>
+    <p><strong>Bio:</strong> {{ object.bio }}</p>
+    <p><strong>Preferenze:</strong> {{ object.get_preferenze_display }}</p>
+    <p><strong>Competenze:</strong>{{ object.competenze }}</p>
+    
+    {% if personal_trainer.immagine_profilo %}
+        <img src="{{ personal_trainer.immagine_profilo.url }}" alt="Immagine profilo" >
+    {% else %}
+        <img src="{% static 'imgs/mia_foto.jpeg' %}" alt="Immagine profilo">
+    {% endif %}
+    <br>
+    <a href="{% url 'trainers:personal_trainer_update' pk=object.pk %}" class="btn btn-primary">Modifica</a>
+{% endblock %}
