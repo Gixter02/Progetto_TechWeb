@@ -57,5 +57,11 @@
             <button type="submit" class="btn btn-danger">Logout</button>
         </form>
         {% endif %}
+        <div>
+        <h3>Sezione allenatori:</h3>
+        {% if user.is_authenticated %}
+            <a href="{% url 'trainers:personal_trainer_home'%}" class="btn btn-primary">Personal Trainer</a>
+        {% endif %}
+        </div>
     </div>
 {% endblock %}
