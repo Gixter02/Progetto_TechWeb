@@ -1,8 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+from bookings.models import Prenotazione
 from .models import RegistratoUtente
 from .froms import RegistratoUtenteForm
 
@@ -30,3 +34,18 @@ class RegistratoUtenteCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user  # Associa l'utente autenticato
         return super().form_valid(form)
+
+@login_required
+def allenamenti_utente(request):
+    # Ottieni l'utente registrato associato all'utente loggato
+    try:
+        registrato_utente = RegistratoUtente.objects.get(user=request.user)
+    except RegistratoUtente.DoesNotExist:
+        # Se l'utente non è un utente registrato, redireziona con un messaggio di errore
+        messages.error(request, "Devi essere un utente registrato per visualizzare i tuoi allenamenti.")
+        return redirect('accounts:home_accounts')
+
+    # Ottieni tutte le prenotazioni future dell'utente registrato
+    allenamenti = Prenotazione.objects.filter(registrato_utente=registrato_utente).order_by('data_prenotazione', 'fascia_oraria')
+
+    return render(request, 'accounts/allenamenti_utente.html', {'allenamenti': allenamenti})
