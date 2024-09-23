@@ -1,8 +1,13 @@
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView, TemplateView, ListView
+
+from bookings.models import Prenotazione
 from .models import PersonalTrainer
 from .forms import PersonalTrainerForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 # View per creare un Personal Trainer
 class PersonalTrainerCreateView(LoginRequiredMixin, CreateView):
@@ -55,3 +60,18 @@ class PersonalTrainerHomeView(TemplateView):
 class PersonalTrainerListView(ListView):
     model = PersonalTrainer
     template_name = 'trainers/personal_trainer_list.html'
+
+@login_required
+def allenamenti_programmati(request):
+    # Verifica se l'utente è un personal trainer
+    try:
+        personal_trainer = PersonalTrainer.objects.get(user=request.user)
+    except PersonalTrainer.DoesNotExist:
+        # Se l'utente non è un personal trainer, redireziona ad una pagina con un messaggio di errore
+        messages.error(request, "Devi essere un personal trainer per visualizzare i tuoi allenamenti.")
+        return redirect('personal_trainer_home')
+
+    # Ottieni tutte le prenotazioni future per questo personal trainer
+    allenamenti = Prenotazione.objects.filter(personal_trainer=personal_trainer).order_by('data_prenotazione', 'fascia_oraria')
+
+    return render(request, 'trainers/allenamenti_programmati.html', {'allenamenti': allenamenti})

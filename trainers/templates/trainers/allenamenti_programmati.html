@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>I tuoi allenamenti programmati</h2>
+
+  {% if allenamenti %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Orario</th>
+          <th>Utente</th>
+          <th>Richieste Specifiche</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for allenamento in allenamenti %}
+          <tr>
+            <td>{{ allenamento.data_prenotazione }}</td>
+            <td>{{ allenamento.get_fascia_oraria_display }}</td>
+            <td>{{ allenamento.registrato_utente.user.username }}</td>
+            <td>{{ allenamento.richieste_specifiche|default:"Nessuna" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Non hai allenamenti programmati.</p>
+  {% endif %}
+
+{% endblock %}

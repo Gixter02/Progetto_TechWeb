@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from .views import PersonalTrainerCreateView, PersonalTrainerUpdateView, PersonalTrainerDetailView, \
-    PersonalTrainerHomeView, PersonalTrainerListView
+    PersonalTrainerHomeView, PersonalTrainerListView, allenamenti_programmati
 
 app_name = 'trainers'
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('<int:pk>/edit/', PersonalTrainerUpdateView.as_view(), name='personal_trainer_update'),
     path('<int:pk>/', PersonalTrainerDetailView.as_view(), name='personal_trainer_detail'),
     path('elencoallenatori/', PersonalTrainerListView.as_view(), name='personal_trainer_list'),
+    path('allenamenti/', allenamenti_programmati, name='allenamenti_programmati'),
 ]
 
 if settings.DEBUG:
