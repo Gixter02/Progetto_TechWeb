@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'trainers.apps.TrainersConfig',
+    'bookings.apps.BookingsConfig',
 ]
 
 MIDDLEWARE = [

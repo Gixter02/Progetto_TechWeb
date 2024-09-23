@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Le tue Prenotazioni</h2>
+
+  {% if prenotazioni %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Orario</th>
+          <th>Personal Trainer</th>
+          <th>Richieste Specifiche</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for prenotazione in prenotazioni %}
+          <tr>
+            <td>{{ prenotazione.data_prenotazione }}</td>
+            <td>{{ prenotazione.get_fascia_oraria_display }}</td>
+            <td>{{ prenotazione.personal_trainer.nome }} {{ prenotazione.personal_trainer.cognome }}</td>
+            <td>{{ prenotazione.richieste_specifiche|default:"Nessuna" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Non hai ancora effettuato alcuna prenotazione.</p>
+  {% endif %}
+
+  <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-primary">Prenota un nuovo allenamento</a>
+
+{% endblock %}
