@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Homepage delle Recensioni</h2>
+
+  <p>Vuoi lasciare una recensione per un personal trainer?</p>
+
+  <form method="GET" action="crea/{{ personal_trainer.id}}">
+    <div class="form-group">
+      <label for="personal_trainer">Seleziona il Personal Trainer:</label>
+      <select id="personal_trainer" name="personal_trainer" class="form-control">
+        <option value="" disabled selected>-- Seleziona un Personal Trainer --</option>
+        {% for personal_trainer in personal_trainers %}
+          <option value="{{ personal_trainer.id }}">{{ personal_trainer.nome }} {{ personal_trainer.cognome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Lascia una Recensione</button>
+</form>
+{% endblock %}
+
+
