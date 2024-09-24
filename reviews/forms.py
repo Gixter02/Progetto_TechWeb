@@ -8,8 +8,8 @@ class RecensioneForm(forms.ModelForm):
         model = Recensione
         fields = [ 'recensione_testuale', 'voto']
         widgets = {
-            'recensione_testuale': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Scrivi la tua recensione...'}),
-            'voto': forms.RadioSelect(choices=[(i, f'{i} Stelle') for i in range(1, 6)]),  # Radio button per il voto a stelle
+            'recensione_testuale': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Scrivi la tua recensione...'}),
+            'voto': forms.RadioSelect(attrs={'class': 'form-check-input'}, choices=[(i, f'{i} Stelle') for i in range(1, 6)]),
         }
     '''
     def __init__(self, *args, **kwargs):
