@@ -28,8 +28,11 @@ def crea_recensione(request):
             recensione.registrato_utente = request.user.registratoutente  # Assegna l'utente loggato
             recensione.personal_trainer = personal_trainer  # Assegna il personal trainer selezionato
             recensione.save()
-            return redirect('accounts:home_accounts')  # Redireziona ad una pagina di successo
+            return redirect('reviews:review_success')  # Redireziona ad una pagina di successo
     else:
         form = RecensioneForm()
 
     return render(request, 'reviews/crea_recensione.html', {'form': form, 'personal_trainer': personal_trainer})
+
+def review_success(request):
+    return render(request, 'reviews/success.html')

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Recensione Inviata!</h2>
+    <p>Grazie per aver lasciato la tua recensione.</p>
+    <p>La tua opinione è molto importante per noi e per altri utenti.</p>
+    
+    <a href="{% url 'accounts:home_accounts' %}" class="btn btn-primary">Torna alla Homepage</a>
+  </div>
+{% endblock %}
