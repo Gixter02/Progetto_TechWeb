@@ -1,7 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 
 from django.shortcuts import render, redirect
 
+from accounts.models import RegistratoUtente
 from reviews.forms import RecensioneForm
 from trainers.models import PersonalTrainer
 
@@ -18,17 +21,40 @@ def homepage_recensioni(request):
 
 @login_required
 def crea_recensione(request):
-    for k in request.GET:
-        personal_trainer = PersonalTrainer.objects.get(id=request.GET[k])
+    # Recupera l'ID del personal trainer dal parametro GET
+    personal_trainer_id = request.GET.get('personal_trainer')
+
+    if not personal_trainer_id:
+        # Se manca il parametro, invia un messaggio di errore
+        messages.error(request, "Personal trainer non selezionato.")
+        return redirect('reviews:homepage')  # Reindirizza alla homepage delle recensioni o a una pagina d'errore
+
+    # Recupera il personal trainer selezionato, gestendo l'eccezione nel caso in cui l'ID non sia valido
+    try:
+        personal_trainer = PersonalTrainer.objects.get(id=personal_trainer_id)
+    except PersonalTrainer.DoesNotExist:
+        messages.error(request, "Il personal trainer selezionato non esiste.")
+        return redirect('reviews:homepage')
+
+    # Ottieni l'utente registrato associato all'utente loggato
+    try:
+        registrato_utente = RegistratoUtente.objects.get(user=request.user)
+    except RegistratoUtente.DoesNotExist:
+        messages.error(request, "Devi essere un utente registrato per effettuare una prenotazione.")
+        return redirect('reviews:homepage')
 
     if request.method == 'POST':
         form = RecensioneForm(request.POST)
         if form.is_valid():
-            recensione = form.save(commit=False)
-            recensione.registrato_utente = request.user.registratoutente  # Assegna l'utente loggato
-            recensione.personal_trainer = personal_trainer  # Assegna il personal trainer selezionato
-            recensione.save()
-            return redirect('reviews:review_success')  # Redireziona ad una pagina di successo
+            try:
+                recensione = form.save(commit=False)
+                recensione.registrato_utente = registrato_utente  # Assegna l'utente loggato
+                recensione.personal_trainer = personal_trainer  # Assegna il personal trainer selezionato
+                recensione.save()
+                messages.success(request, 'Recensione registrata con successo')
+                return redirect('reviews:review_success')  # Redireziona ad una pagina di successo
+            except IntegrityError:
+                messages.error(request, "Hai già lasciato una recensione per questo personal trainer.")
     else:
         form = RecensioneForm()
 

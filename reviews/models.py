@@ -16,6 +16,9 @@ class Recensione(models.Model):
 
     class Meta:
         verbose_name_plural = "Recensioni"
+        constraints = [
+            models.UniqueConstraint(fields=['registrato_utente', 'personal_trainer'], name='unique_recensione_per_trainer')
+        ]
 
     def __str__(self):
         return f"Recensione di {self.registrato_utente} per {self.personal_trainer} - {self.voto} stelle"

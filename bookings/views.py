@@ -14,7 +14,7 @@ def crea_prenotazione(request):
         registrato_utente = RegistratoUtente.objects.get(user=request.user)
     except RegistratoUtente.DoesNotExist:
         messages.error(request, "Devi essere un utente registrato per effettuare una prenotazione.")
-        return redirect('home')
+        return redirect('homepage_palestra')
 
     if request.method == 'POST':
         form = PrenotazioneForm(request.POST)

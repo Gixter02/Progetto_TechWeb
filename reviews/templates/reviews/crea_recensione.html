@@ -34,7 +34,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'homepage_palestra' %}">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'accounts:home_accounts' %}">Account</a>
@@ -60,6 +60,18 @@
 
 
   <div class="container mt-5">
+
+  <!-- Sezione per la visualizzazione degli errori -->
+    {% if messages %}
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
     <h2 class="text-center mb-4">Scrivi una recensione per {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</h2>
 
     <form method="POST" class="mx-auto" style="max-width: 600px;">
