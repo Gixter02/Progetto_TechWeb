@@ -1,67 +1,91 @@
 {% extends "accounts/base.html" %}
 
-{% block title %} Homepage Palestra {% endblock %}
+{% block title %} Homepage Account {% endblock %}
 
 {% block content %}
-    <div class="homepage-container">
-        {% block header1 %}
-        <h1>Benvenuto nella Nostra Palestra!</h1>
-        <p>Il tuo luogo ideale per raggiungere i tuoi obiettivi di fitness.</p>
-        
+    <div class="container mt-5">
+        <!-- Header della pagina -->
+        <div class="text-center">
+            <h1 class="display-4">Benvenuto nella Nostra Palestra!</h1>
+            <p class="lead">Il tuo luogo ideale per raggiungere i tuoi obiettivi di fitness.</p>
+        </div>
+
+        <!-- Se l'utente non è autenticato -->
         {% if not user.is_authenticated %}
-        <p>Non sei autenticato. Accedi per gestire il tuo profilo e scoprire tutte le nostre attività.</p>
-        <form method="POST" action="{% url 'accounts:login' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <p>Non hai un account? <a href="{% url 'accounts:creautente' %}">Registrati qui</a>.</p>
+        <div class="alert alert-warning text-center mt-4">
+            <p>Non sei autenticato. Accedi per gestire il tuo profilo e scoprire tutte le nostre attività.</p>
+            <form method="POST" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            <p class="mt-2">Non hai un account? <a href="{% url 'accounts:creautente' %}">Registrati qui</a>.</p>
+        </div>
         {% endif %}
-        {% endblock %}
-        
+
+        <!-- Se il login ha avuto successo -->
         {% if user.is_authenticated and "ok" in request.GET.login %}
-        <div class="alert alert-success">
-            La procedura di login è andata a buon fine! Benvenuto/a, {{ user.username }}.
+        <div class="alert alert-success text-center mt-4">
+            <p>La procedura di login è andata a buon fine! Benvenuto/a, {{ user.username }}.</p>
         </div>
 
-        <div class="user-options">
-            <h3>Le tue opzioni:</h3>
-            <ul>
-                <li>Visualizza il tuo profilo</li>
-                <li>Scopri i programmi di allenamento</li>
-                <li>Eventi e lezioni in arrivo</li>
-            </ul>
+        <div class="user-options mt-4">
+            <h3 class="text-center">Le tue opzioni:</h3>
+            <div class="row text-center mt-3">
+                <div class="col">
+                    <button class="btn btn-outline-secondary">Visualizza il tuo profilo</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-secondary">Scopri i programmi di allenamento</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-secondary">Eventi e lezioni in arrivo</button>
+                </div>
+            </div>
         </div>
 
-        <form method="POST" action="{% url 'accounts:logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
+        <div class="text-center mt-4">
+            <form method="POST" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
         {% endif %}
-        
+
+        <!-- Se l'utente è già autenticato -->
         {% if user.is_authenticated and not "ok" in request.GET.login %}
-        <div class="alert alert-info">
-            Sei già autenticato/a, {{ user.username }}.
+        <div class="alert alert-info text-center mt-4">
+            <p>Sei già autenticato/a, {{ user.username }}.</p>
         </div>
 
-        <div class="user-options">
-            <h3>Esplora:</h3>
-            <ul>
-                <li>Programmi di allenamento</li>
-                <li>Guide nutrizionali</li>
-                <li>Eventi e lezioni</li>
-            </ul>
+        <div class="user-options mt-4">
+            <h3 class="text-center">Esplora:</h3>
+            <div class="row text-center mt-3">
+                <div class="col">
+                    <button class="btn btn-outline-primary">Programmi di allenamento</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-primary">Guide nutrizionali</button>
+                </div>
+                <div class="col">
+                    <button class="btn btn-outline-primary">Eventi e lezioni</button>
+                </div>
+            </div>
         </div>
 
-        <form method="POST" action="{% url 'accounts:logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Logout</button>
-        </form>
+        <div class="text-center mt-4">
+            <form method="POST" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
         {% endif %}
-        <div>
-        <h3>Sezione allenatori:</h3>
-        {% if user.is_authenticated %}
-            <a href="{% url 'trainers:personal_trainer_home'%}" class="btn btn-primary">Personal Trainer</a>
-        {% endif %}
+
+        <!-- Sezione per i personal trainer -->
+        <div class="text-center mt-5">
+            <h3>Sezione Allenatori</h3>
+            {% if user.is_authenticated %}
+                <a href="{% url 'trainers:personal_trainer_home'%}" class="btn btn-primary mt-3">Vai ai Personal Trainer</a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

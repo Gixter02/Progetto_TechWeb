@@ -2,13 +2,24 @@
 {% block title %} Creazione Utente {% endblock %}
 
 {% block header1 %}
-  <h1>Pagina di Registrazione</h1>
-  <p>Si prega di compilare i campi necessari</p>
+  <div class="container text-center mt-5">
+    <h1 class="mb-3">Pagina di Registrazione</h1>
+    <p>Si prega di compilare i campi necessari</p>
+  </div>
 {% endblock %}
+
 {% block content %}
-<form method="post">
+<div class="container mt-4">
+  <form method="post" class="mx-auto" style="max-width: 600px;">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Registrati</button>
-</form>
+
+    <!-- Renderizza il form utilizzando Bootstrap -->
+    <div class="mb-3">
+      {{ form.as_p }}
+    </div>
+
+    <!-- Bottone di submit con Bootstrap -->
+    <button type="submit" class="btn btn-primary w-100">Registrati</button>
+  </form>
+</div>
 {% endblock %}

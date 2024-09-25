@@ -1,31 +1,36 @@
-{% extends 'base.html' %}
+{% extends 'accounts/base.html' %}
 
 {% block content %}
-  <h2>I tuoi allenamenti programmati</h2>
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">I tuoi allenamenti programmati</h2>
 
-  {% if allenamenti %}
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Orario</th>
-          <th>Personal Trainer</th>
-          <th>Richieste Specifiche</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for allenamento in allenamenti %}
-          <tr>
-            <td>{{ allenamento.data_prenotazione }}</td>
-            <td>{{ allenamento.get_fascia_oraria_display }}</td>
-            <td>{{ allenamento.personal_trainer.nome }} {{ allenamento.personal_trainer.cognome }}</td>
-            <td>{{ allenamento.richieste_specifiche|default:"Nessuna" }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <p>Non hai allenamenti programmati.</p>
-  {% endif %}
-
+    {% if allenamenti %}
+      <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Data</th>
+              <th scope="col">Orario</th>
+              <th scope="col">Personal Trainer</th>
+              <th scope="col">Richieste Specifiche</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for allenamento in allenamenti %}
+              <tr>
+                <td>{{ allenamento.data_prenotazione }}</td>
+                <td>{{ allenamento.get_fascia_oraria_display }}</td>
+                <td>{{ allenamento.personal_trainer.nome }} {{ allenamento.personal_trainer.cognome }}</td>
+                <td>{{ allenamento.richieste_specifiche|default:"Nessuna" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="alert alert-warning text-center" role="alert">
+        Non hai allenamenti programmati.
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}
