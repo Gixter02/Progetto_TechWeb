@@ -1,10 +1,54 @@
-{% extends "base.html" %}
+{% extends "trainers/base.html" %}
 
 {% block content %}
-    <h1>{% if object %}Modifica il tuo profilo{% else %}Crea il tuo profilo{% endif %}</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Salva</button>
-    </form>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">
+        {% if object %}
+            Modifica il tuo profilo
+        {% else %}
+            Crea il tuo profilo
+        {% endif %}
+    </h1>
+    <center>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="{{ form.nome.id_for_label }}" class="form-label">{{ form.nome.label }}</label>
+                    {{ form.nome }}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.cognome.id_for_label }}" class="form-label">{{ form.cognome.label }}</label>
+                    {{ form.cognome }}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.data_di_nascita.id_for_label }}" class="form-label">{{ form.data_di_nascita.label }}</label>
+                    {{ form.data_di_nascita }}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.preferenze.id_for_label }}" class="form-label">{{ form.preferenze.label }}</label>
+                    {{ form.preferenze }}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.bio.id_for_label }}" class="form-label">{{ form.bio.label }}</label>
+                    {{ form.bio }}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.competenze.id_for_label }}" class="form-label">{{ form.competenze.label }}</label>
+                    {{ form.competenze }}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.immagine_profilo.id_for_label }}" class="form-label">{{ form.immagine_profilo.label }}</label>
+                    {{ form.immagine_profilo }}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Salva</button>
+            </form>
+        </div>
+    </div>
+        </center>
+</div>
+
 {% endblock %}
