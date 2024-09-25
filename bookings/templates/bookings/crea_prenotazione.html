@@ -1,11 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'bookings/base.html' %}
 
 {% block content %}
-  <h2>Crea una Prenotazione</h2>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Crea una Prenotazione</h2>
 
-  <form method="POST">
+  <form method="POST" class="mx-auto" style="max-width: 600px;">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Prenota</button>
+
+    <!-- Form con styling di Bootstrap -->
+    <div class="form-group mb-3">
+      {{ form.as_p }}
+    </div>
+
+    <!-- Bottone di invio stilizzato con Bootstrap -->
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">Prenota</button>
+    </div>
   </form>
+</div>
 {% endblock %}

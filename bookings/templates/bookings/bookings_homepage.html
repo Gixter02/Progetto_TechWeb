@@ -1,11 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'bookings/base.html' %}
 
 {% block content %}
-  <h2>Le tue Prenotazioni</h2>
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Le tue Prenotazioni</h2>
 
   {% if prenotazioni %}
-    <table class="table">
-      <thead>
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
         <tr>
           <th>Data</th>
           <th>Orario</th>
@@ -25,9 +26,13 @@
       </tbody>
     </table>
   {% else %}
-    <p>Non hai ancora effettuato alcuna prenotazione.</p>
+    <div class="alert alert-warning text-center" role="alert">
+      Non hai ancora effettuato alcuna prenotazione.
+    </div>
   {% endif %}
 
-  <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-primary">Prenota un nuovo allenamento</a>
-
+  <div class="text-center mt-4">
+    <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-primary">Prenota un nuovo allenamento</a>
+  </div>
+</div>
 {% endblock %}
