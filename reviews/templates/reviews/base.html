@@ -1,33 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaHld+0dFT+COmPAVsA+OQ/pzALxo7ao1lBxF/T2Rv5bBOsm5mZ2lVHG6hD" crossorigin="anonymous">
+    <!-- Inclusione di Bootstrap 5 dal CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Spazio per eventuali stili o script aggiuntivi -->
-    {% block head %} {% endblock %}
-
+    {% block head %}{% endblock %}
     <title>{% block title %} {% endblock %}</title>
+
+    <style>
+        /* Aggiungi eventuali stili personalizzati qui */
+        body {
+            padding-top: 56px; /* Spazio per la navbar */
+        }
+    </style>
 </head>
 <body>
 
-<!-- Inclusione di Bootstrap 5 e Popper.js per la navbar -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Main content section -->
-    <div class="container mt-4">
+    <!-- Navbar di base -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Palestra XYZ</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'homepage_palestra' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'trainers:personal_trainer_home' %}">Allenatori</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bookings:home_page' %}">Prenotazioni</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'reviews:homepage_recensioni' %}">Recensioni</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content block -->
+    <div class="container mt-5">
         {% block content %}
-        Ciao
+        <!-- Inserisci qui il contenuto delle varie pagine -->
         {% endblock %}
     </div>
 
-    <!-- Bootstrap JS, Popper.js, and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Q/Z+eRpznksA1rwFz4cDrg63NOOZg1hYkGmjmdrGG3rEK8pbMO1hKntp0VIx0G2T" crossorigin="anonymous"></script>
+    <!-- Inclusione di Bootstrap JS e Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Spazio per eventuali script aggiuntivi -->
+    <!-- Aggiungi eventuali script extra -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>
