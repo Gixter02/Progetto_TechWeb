@@ -3,13 +3,19 @@
 {% block title %}Logout Effettuato{% endblock %}
 
 {% block content %}
-    <div class="logout-success-container">
-        <h1>Logout effettuato con successo</h1>
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4">Logout effettuato con successo</h1>
 
-        <p>Hai effettuato il logout dal tuo account. Grazie per aver visitato la nostra palestra!</p>
+        <p class="lead">Hai effettuato il logout dal tuo account. Grazie per aver visitato la nostra palestra!</p>
 
-        <a href="{% url 'accounts:home_accounts' %}" class="btn btn-primary">Torna alla Homepage</a>
+        <a href="{% url 'homepage_palestra' %}" class="btn btn-primary mt-4">Torna alla Homepage</a>
     </div>
+</div>
 {% endblock %}
 
-{% block footer %} {% endblock %}
+{% block footer %}
+<div class="container text-center mt-5">
+    <p class="text-muted">&copy; 2024 - La tua palestra</p>
+</div>
+{% endblock %}

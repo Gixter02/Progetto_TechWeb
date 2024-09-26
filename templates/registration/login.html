@@ -1,27 +1,45 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block title %} Login come Utente{% endblock %}
 
 {% block header1 %}
-  <h1>Pagina di Login</h1>
-  <p>Si prega di compilare i campi necessari</p> 
-{% endblock %}
-
-{% block content %} 
-
-{% if "notok" in request.GET.auth %}
-<div class="alert alert-danger" role="alert">
-  Si è arrivati qui in quanto non si dispone dei permessi necessari per il servizio scelto!
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4">Pagina di Login</h1>
+        <p class="lead">Si prega di compilare i campi necessari</p>
+    </div>
 </div>
-{% endif %}
-
-<form method="post"> {% csrf_token %}
-
-  {{ form }}
-  
-  <input type="submit" class="btn btn-success" value="Esegui login">
-  
-  </form>
-
 {% endblock %}
 
-{% block footer %} {% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <!-- Alert se l'utente non ha i permessi -->
+    {% if "notok" in request.GET.auth %}
+    <div class="alert alert-danger text-center" role="alert">
+        Si è arrivati qui in quanto non si dispone dei permessi necessari per il servizio scelto!
+    </div>
+    {% endif %}
+
+    <!-- Form di login -->
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card p-4 shadow">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.as_p }} <!-- Visualizza il form con il layout di paragrafo -->
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-success btn-block" value="Esegui login">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div class="container text-center mt-5">
+    <p class="text-muted">&copy; 2024 - La tua palestra</p>
+</div>
+{% endblock %}
