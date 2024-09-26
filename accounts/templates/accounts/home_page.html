@@ -49,10 +49,10 @@
                     <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary">Visualizza il tuo profilo</a>
                 </div>
                 <div class="col">
-                    <button class="btn btn-outline-secondary">Scopri i programmi di allenamento</button>
+                    <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-outline-secondary">Prenota un allenamento</a>
                 </div>
                 <div class="col">
-                    <button class="btn btn-outline-secondary">Eventi e lezioni in arrivo</button>
+                    <a href="{% url 'reviews:crea_recensione' %}" class="btn btn-outline-secondary">Inserisci una recensione</a>
                 </div>
             </div>
         </div>
@@ -89,10 +89,10 @@
                     <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary">Visualizza il tuo profilo</a>
                 </div>
                 <div class="col">
-                    <button class="btn btn-outline-primary">Programmi di allenamento</button>
+                    <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-outline-secondary">Prenota un allenamento</a>
                 </div>
                 <div class="col">
-                    <button class="btn btn-outline-primary">Eventi e lezioni</button>
+                    <a href="{% url 'reviews:homepage_recensioni' %}" class="btn btn-outline-secondary">Inserisci una recensione</a>
                 </div>
             </div>
         </div>
