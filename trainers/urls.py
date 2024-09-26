@@ -4,7 +4,7 @@ from django.urls import path
 
 from .views import PersonalTrainerCreateView, PersonalTrainerUpdateView, \
     PersonalTrainerHomeView, allenamenti_programmati, PersonalTrainerReviewDetailView, \
-    elenco_personal_trainer, disponibilita_personal_trainer
+    elenco_personal_trainer, disponibilita_personal_trainer, disponibilita_personal_trainers
 
 app_name = 'trainers'
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path('detail/<pk>/', PersonalTrainerReviewDetailView.as_view(), name='personal_trainer_review'),
     path('elenco/', elenco_personal_trainer, name='elenco_personal_trainer'),
     path('disponibilita/<pk>/', disponibilita_personal_trainer, name='disponibilita_personal_trainer'),
+    path('verificadisponibilita/', disponibilita_personal_trainers, name='disponibilita_personal_trainers'),
 ]
 
 if settings.DEBUG:

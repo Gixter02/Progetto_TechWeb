@@ -117,3 +117,34 @@ def disponibilita_personal_trainer(request, pk):
         return render(request, 'trainers/personal_trainer_disponibilita.html', context)
 
     return render(request, 'trainers/personal_trainer_disponibilita.html', {'personal_trainer': personal_trainer})
+
+
+def disponibilita_personal_trainers(request):
+    personal_trainer_list = PersonalTrainer.objects.all()
+    fasce_disponibili = []
+    selected_trainer = None
+    selected_date = None
+
+    if request.method == 'POST':
+        trainer_id = request.POST.get('personal_trainer')
+        selected_date_input = request.POST.get('data')
+        selected_date = timezone.datetime.strptime(selected_date_input, "%Y-%m-%d").date()
+        selected_trainer = get_object_or_404(PersonalTrainer, pk=trainer_id)
+
+        # Ottieni tutte le fasce orarie già prenotate per il personal trainer selezionato e quella data
+        fasce_prenotate = Prenotazione.objects.filter(
+            personal_trainer=selected_trainer,
+            data_prenotazione=selected_date
+        ).values_list('fascia_oraria', flat=True)
+
+        # Disponibilità delle fasce orarie
+        fasce_disponibili = [fascia for fascia in Prenotazione.ORARI_FASCIA if fascia[0] not in fasce_prenotate]
+
+    context = {
+        'personal_trainer_list': personal_trainer_list,
+        'fasce_disponibili': fasce_disponibili,
+        'selected_trainer': selected_trainer,
+        'selected_date': selected_date,
+    }
+
+    return render(request, 'trainers/personal_trainers_disponibilita.html', context)

@@ -31,6 +31,7 @@
                     </p>
                 </div>
                 <a href="{% url 'trainers:personal_trainer_review' trainer.pk %}" class="btn btn-primary">Dettagli</a>
+                <a href="{% url 'trainers:disponibilita_personal_trainer' trainer.pk %}" class="btn btn-primary">Disponibilità</a>
             </li>
         {% empty %}
             <li class="list-group-item">Nessun personal trainer trovato.</li>

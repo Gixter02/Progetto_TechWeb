@@ -1,0 +1,40 @@
+{% extends "trainers/base.html" %}
+
+{% block title %}Controlla Disponibilità{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Controlla Disponibilità</h1>
+
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="personal_trainer">Seleziona un Personal Trainer:</label>
+            <select name="personal_trainer" class="form-control" required>
+                <option value="">-- Seleziona --</option>
+                {% for trainer in personal_trainer_list %}
+                    <option value="{{ trainer.pk }}">{{ trainer.nome }} {{ trainer.cognome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="data">Seleziona una data:</label>
+            <input type="date" name="data" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Controlla Disponibilità</button>
+    </form>
+
+    {% if fasce_disponibili %}
+        <h2 class="mt-4">Fasce Orarie Disponibili per {{ selected_trainer.nome }} il {{ selected_date }}:</h2>
+        <ul class="list-group">
+            {% for fascia in fasce_disponibili %}
+                <li class="list-group-item">{{ fascia.1 }}</li>  <!-- Il valore 1 è il testo della fascia oraria -->
+            {% endfor %}
+        </ul>
+    {% elif selected_date and selected_trainer %}
+        <div class="alert alert-warning mt-4">
+            <p>Non ci sono disponibilità per {{ selected_trainer.nome }} il {{ selected_date }}.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
