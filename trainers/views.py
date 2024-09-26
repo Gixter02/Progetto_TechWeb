@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView, TemplateView, ListView
 
@@ -10,6 +10,7 @@ from .models import PersonalTrainer
 from .forms import PersonalTrainerForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.utils import timezone
 
 # View per creare un Personal Trainer
 class PersonalTrainerCreateView(LoginRequiredMixin, CreateView):
@@ -90,3 +91,29 @@ def elenco_personal_trainer(request):
         'personal_trainer_list': personal_trainer_list,
     }
     return render(request, 'trainers/personal_trainer_elenco.html', context)
+
+
+def disponibilita_personal_trainer(request, pk):
+    personal_trainer = get_object_or_404(PersonalTrainer, pk=pk)
+
+    if request.method == 'POST':
+        data_input = request.POST.get('data')
+        data = timezone.datetime.strptime(data_input, "%Y-%m-%d").date()
+
+        # Ottieni tutte le fasce orarie già prenotate per quel personal trainer e quella data
+        fasce_prenotate = Prenotazione.objects.filter(
+            personal_trainer=personal_trainer,
+            data_prenotazione=data
+        ).values_list('fascia_oraria', flat=True)
+
+        # Disponibilità delle fasce orarie
+        fasce_disponibili = [fascia for fascia in Prenotazione.ORARI_FASCIA if fascia[0] not in fasce_prenotate]
+
+        context = {
+            'personal_trainer': personal_trainer,
+            'data': data,
+            'fasce_disponibili': fasce_disponibili,
+        }
+        return render(request, 'trainers/personal_trainer_disponibilita.html', context)
+
+    return render(request, 'trainers/personal_trainer_disponibilita.html', {'personal_trainer': personal_trainer})
