@@ -32,5 +32,11 @@
         Non hai allenamenti programmati.
       </div>
     {% endif %}
+  <!-- Pulsante per la prenotazione -->
+    <div class="text-center mt-4">
+      <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-primary">
+        Prenota un nuovo allenamento
+      </a>
+    </div>
   </div>
 {% endblock %}
