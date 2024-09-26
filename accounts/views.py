@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
@@ -49,3 +49,16 @@ def allenamenti_utente(request):
     allenamenti = Prenotazione.objects.filter(registrato_utente=registrato_utente).order_by('data_prenotazione', 'fascia_oraria')
 
     return render(request, 'accounts/allenamenti_utente.html', {'allenamenti': allenamenti})
+
+class RegistratoUtenteDetailview(LoginRequiredMixin, DetailView):
+    model = RegistratoUtente
+    template_name = 'accounts/profilo.html'
+
+class RegistraoUtenteUpdateView(LoginRequiredMixin, UpdateView):
+    model = RegistratoUtente
+    form_class = RegistratoUtenteForm
+    template_name = 'accounts/edit_registrato_utente.html'
+
+    def get_success_url(self):
+        pk = self.get_context_data()["object"].pk
+        return reverse('accounts:profilo', kwargs={'pk': pk})

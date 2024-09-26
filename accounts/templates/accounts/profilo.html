@@ -1,0 +1,22 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Dettagli Utente</h2>
+    <div class="card">
+        <div class="card-header">
+            Dettagli di {{ object.user.username }}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Nome Completo: {{ object.nome }} {{ object.cognome }}</h5>
+            <p class="card-text"><strong>Data di Nascita:</strong> {{ object.data_nascita }}</p>
+            <p class="card-text"><strong>Data di Registrazione:</strong> {{ object.user.date_joined|date:"d/m/Y" }}</p>
+            <p class="card-text"><strong>Bio:</strong> {{ object.bio|default:"Non disponibile" }}</p>
+            <p class="card-text"><strong>Preferenze:</strong> {{ object.preferenze }}</p>
+            
+            <a href="{% url 'accounts:modifica' object.pk %}" class="btn btn-primary">Modifica Profilo</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

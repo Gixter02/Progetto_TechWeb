@@ -28,11 +28,25 @@
             <p>La procedura di login è andata a buon fine! Benvenuto/a, {{ user.username }}.</p>
         </div>
 
+        {% if not user.registratoutente %}
+            <div class="alert alert-warning text-center mt-4">
+                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed altre funzioni.</p>
+                <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
+            </div>
+
+            <div class="text-center mt-4">
+            <form method="POST" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
+        </div>
+            {% else %}
+
         <div class="user-options mt-4">
             <h3 class="text-center">Le tue opzioni:</h3>
             <div class="row text-center mt-3">
                 <div class="col">
-                    <button class="btn btn-outline-secondary">Visualizza il tuo profilo</button>
+                    <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary">Visualizza il tuo profilo</a>
                 </div>
                 <div class="col">
                     <button class="btn btn-outline-secondary">Scopri i programmi di allenamento</button>
@@ -49,27 +63,46 @@
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
         </div>
+            {% endif %}
         {% endif %}
 
         <!-- Se l'utente è già autenticato -->
-        {% if user.is_authenticated and not "ok" in request.GET.login %}
-        <div class="alert alert-info text-center mt-4">
-            <p>Sei già autenticato/a, {{ user.username }}.</p>
+        {% if user.is_authenticated and not "ok" in request.GET.login%}
+
+        {% if not user.registratoutente %}
+            <div class="alert alert-warning text-center mt-4">
+                <p>Completa il tuo profilo per accedere a tutte le funzionalità.</p>
+                <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
+            </div>
+            <div class="text-center mt-4">
+            <form method="POST" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </form>
         </div>
+            {% else %}
 
         <div class="user-options mt-4">
             <h3 class="text-center">Esplora:</h3>
             <div class="row text-center mt-3">
                 <div class="col">
-                    <button class="btn btn-outline-primary">Programmi di allenamento</button>
+                    <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary">Visualizza il tuo profilo</a>
                 </div>
                 <div class="col">
-                    <button class="btn btn-outline-primary">Guide nutrizionali</button>
+                    <button class="btn btn-outline-primary">Programmi di allenamento</button>
                 </div>
                 <div class="col">
                     <button class="btn btn-outline-primary">Eventi e lezioni</button>
                 </div>
             </div>
+        </div>
+        {% endif %}
+            <!-- Sezione per i personal trainer -->
+        <div class="text-center mt-5">
+            <h3>Sezione Allenatori</h3>
+            {% if user.is_authenticated %}
+                <a href="{% url 'trainers:personal_trainer_home'%}" class="btn btn-primary mt-3">Vai ai Personal Trainer</a>
+            {% endif %}
         </div>
 
         <div class="text-center mt-4">
@@ -80,12 +113,6 @@
         </div>
         {% endif %}
 
-        <!-- Sezione per i personal trainer -->
-        <div class="text-center mt-5">
-            <h3>Sezione Allenatori</h3>
-            {% if user.is_authenticated %}
-                <a href="{% url 'trainers:personal_trainer_home'%}" class="btn btn-primary mt-3">Vai ai Personal Trainer</a>
-            {% endif %}
-        </div>
+
     </div>
 {% endblock %}
