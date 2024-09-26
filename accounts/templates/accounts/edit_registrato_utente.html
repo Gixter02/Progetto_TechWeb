@@ -4,34 +4,12 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Modifica Profilo</h2>
 
-    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <form method="post" class="mx-auto" style="max-width: 600px;">
         {% csrf_token %}
         
         <div class="mb-3">
-            <label for="id_nome" class="form-label">Nome</label>
-            {{ form.nome}}
-        </div>
-
-        <div class="mb-3">
-            <label for="id_cognome" class="form-label">Cognome</label>
-            {{ form.cognome }}
-        </div>
-
-        <div class="mb-3">
-            <label for="id_data_di_nascita" class="form-label">Data di Nascita</label>
-            {{ form.data_di_nascita}}
-        </div>
-
-        <div class="mb-3">
-            <label for="id_bio" class="form-label">Bio</label>
-            {{ form.bio}}
-        </div>
-
-        <div class="mb-3">
-            <label for="id_preferenze" class="form-label">Preferenze</label>
-            {{ form.preferenze }}
-        </div>
-
+      {{ form.as_p }}
+    </div>
 
         <button type="submit" class="btn btn-primary">Salva Modifiche</button>
         <a href="{% url 'accounts:profilo' object.pk %}" class="btn btn-secondary">Annulla</a>
