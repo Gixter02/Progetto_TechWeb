@@ -1,0 +1,80 @@
+{% extends "trainers/base.html" %}
+
+{% block title %} Dettagli Allenatore {% endblock %}
+
+{% block content %}
+    {% load static %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Dettagli di {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            {% if personal_trainer.immagine_profilo %}
+                <img src="{{ personal_trainer.immagine_profilo.url }}" alt="Immagine profilo" class="img-fluid rounded-circle" style="max-width: 100%;">
+            {% else %}
+                <img src="{% static 'imgs/mia_foto.jpeg' %}" alt="Immagine profilo" class="img-fluid rounded-circle" style="max-width: 100%;">
+            {% endif %}
+        </div>
+
+        <div class="col-md-8">
+            <p><strong>Nome:</strong> {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</p>
+            <p><strong>Data di Nascita:</strong> {{ personal_trainer.data_di_nascita }}</p>
+            <p><strong>Preferenze:</strong> {{ personal_trainer.get_preferenze_display }}</p>
+            <p><strong>Bio:</strong> {{ personal_trainer.bio }}</p>
+            <p><strong>Competenze:</strong> {{ personal_trainer.competenze }}</p>
+            <p><strong>Media Voti:</strong>
+                {% if media_voti %}
+                    {{ media_voti|floatformat:1 }} / 5
+                    <!-- Visualizzazione delle stelle per la media dei voti -->
+                    <span>
+                        {% for i in "12345" %}
+                            {% if i <= media_voti|floatformat %}
+                                <i class="fas fa-star text-warning"></i> <!-- Stella piena -->
+                            {% else %}
+                                <i class="far fa-star text-warning"></i> <!-- Stella vuota -->
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                {% else %}
+                    Nessuna recensione
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Sezione delle recensioni -->
+    <div class="mt-5">
+
+        <h2 class="text-center">Recensioni</h2>
+
+        {% if recensioni %}
+            <ul class="list-group mt-4">
+                {% for recensione in recensioni %}
+                    <li class="list-group-item">
+                        <p><strong>{{ recensione.registrato_utente.user }}:</strong>  voto {{ recensione.voto }}
+                            <!-- Visualizzazione delle stelle per il voto della singola recensione -->
+                            <span>
+                                {% for i in "12345" %}
+                                    {% if i <= recensione.voto|floatformat %}
+                                        <i class="fas fa-star text-warning"></i> <!-- Stella piena -->
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i> <!-- Stella vuota -->
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </p>
+                        <p>{{ recensione.recensione_testuale }}</p>
+                        <p class="text-muted">Recensito il {{ recensione.data_recensione|date:"d/m/Y" }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="alert alert-info text-center mt-4">
+                Nessuna recensione disponibile per questo allenatore.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
