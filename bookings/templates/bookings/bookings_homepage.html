@@ -4,6 +4,13 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">Le tue Prenotazioni</h2>
 
+{% if not user.registratoutente %}
+            <div class="alert alert-warning text-center mt-4">
+                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed altre funzioni.</p>
+                <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
+            </div>
+{% else %}
+
   {% if prenotazioni %}
     <table class="table table-striped table-bordered">
       <thead class="table-dark">
@@ -35,4 +42,6 @@
     <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-primary">Prenota un nuovo allenamento</a>
   </div>
 </div>
+
+    {% endif %}
 {% endblock %}

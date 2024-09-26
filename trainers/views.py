@@ -55,6 +55,8 @@ class PersonalTrainerHomeView(TemplateView):
             context['personal_trainer'] = personal_trainer
         except PersonalTrainer.DoesNotExist:
             context['personal_trainer'] = None
+        except TypeError:
+            context['personal_trainer'] = None
         return context
 
 class PersonalTrainerListView(ListView):

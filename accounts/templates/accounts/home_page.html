@@ -34,12 +34,6 @@
                 <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
             </div>
 
-            <div class="text-center mt-4">
-            <form method="POST" action="{% url 'accounts:logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </div>
             {% else %}
 
         <div class="user-options mt-4">
@@ -57,12 +51,6 @@
             </div>
         </div>
 
-        <div class="text-center mt-4">
-            <form method="POST" action="{% url 'accounts:logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </div>
             {% endif %}
         {% endif %}
 
@@ -74,12 +62,7 @@
                 <p>Completa il tuo profilo per accedere a tutte le funzionalità.</p>
                 <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
             </div>
-            <div class="text-center mt-4">
-            <form method="POST" action="{% url 'accounts:logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Logout</button>
-            </form>
-        </div>
+
             {% else %}
 
         <div class="user-options mt-4">
@@ -105,14 +88,22 @@
             {% endif %}
         </div>
 
-        <div class="text-center mt-4">
+        {% endif %}
+        {% if user.is_authenticated %}
+    <div class="text-center mt-4">
             <form method="POST" action="{% url 'accounts:logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
         </div>
-        {% endif %}
-
+    {% endif %}
 
     </div>
+{% endblock %}
+
+{% block footer %}
+
+<div class="container text-center mt-5">
+    <p class="text-muted">&copy; 2024 - La tua palestra</p>
+</div>
 {% endblock %}

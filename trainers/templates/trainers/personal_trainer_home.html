@@ -2,6 +2,12 @@
 {% load static %}
 
 {% block content %}
+    {% if not user.is_authenticated %}
+        <h1 class="text-center mb-4">Benvenuto nella sezione allenatori!</h1>
+        <div class="text-center mt-4">
+            <a href="{% url 'trainers:personal_trainer_list' %}" class="btn btn-primary">I nostri allenatori</a>
+        </div>
+    {% else %}
 <div class="container mt-5">
     <h1 class="text-center mb-4">Benvenuto nella tua Dashboard, {{ personal_trainer.nome }}!</h1>
 
@@ -26,13 +32,22 @@
 
         <hr class="my-4">
 
+        <!-- Bottone per visualizzare gli allenamenti programmati -->
         <div class="text-center mt-4">
-            <a href="{% url 'trainers:personal_trainer_update' pk=personal_trainer.pk %}" class="btn btn-primary">Modifica il tuo profilo</a>
+            <a href="{% url 'trainers:allenamenti_programmati' %}" class="btn btn-primary">Visualizza i tuoi allenamenti programmati</a>
         </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'trainers:personal_trainer_update' pk=personal_trainer.pk %}" class="btn btn-secondary">Modifica il tuo profilo</a>
+        </div>
+
     {% else %}
+
         <div class="alert alert-warning mt-4">
             <p>Non hai ancora creato il tuo profilo da personal trainer. <a href="{% url 'trainers:personal_trainer_create' %}">Clicca qui</a> per creare il tuo profilo.</p>
         </div>
+
     {% endif %}
 </div>
+    {% endif %}
 {% endblock %}
