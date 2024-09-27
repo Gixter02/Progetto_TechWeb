@@ -14,7 +14,7 @@
             <p class="card-text"><strong>Bio:</strong> {{ object.bio|default:"Non disponibile" }}</p>
             <p class="card-text"><strong>Preferenze:</strong> {{ object.preferenze }}</p>
             
-            <a href="{% url 'accounts:modifica' object.pk %}" class="btn btn-primary">Modifica Profilo</a>
+            <a href="{% url 'accounts:modifica' object.pk %}" class="btn btn-secondary">Modifica Profilo</a>
         </div>
     </div>
 

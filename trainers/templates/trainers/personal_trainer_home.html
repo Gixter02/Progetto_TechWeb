@@ -2,14 +2,16 @@
 {% load static %}
 
 {% block content %}
+    <h1 class="text-center mb-4">Benvenuto nella sezione allenatori!</h1>
     {% if not user.is_authenticated %}
-        <h1 class="text-center mb-4">Benvenuto nella sezione allenatori!</h1>
-        <div class="text-center mt-4">
-            <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-primary">I nostri allenatori</a>
-        </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-primary">I nostri allenatori</a>
+    </div>
+
     {% else %}
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Benvenuto nella tua Dashboard, {{ personal_trainer.nome }}!</h1>
+    <h3 class="text-center mb-4">Il tuo profilo</h3>
 
     {% if personal_trainer %}
         <div class="row">
@@ -29,8 +31,11 @@
                 <p><strong>Competenze:</strong> {{ personal_trainer.competenze }}</p>
             </div>
         </div>
-
+        <div class="text-center mt-4">
+            <a href="{% url 'trainers:personal_trainer_update' pk=personal_trainer.pk %}" class="btn btn-secondary">Modifica il tuo profilo</a>
+        </div>
         <hr class="my-4">
+        <h3 class="text-center mb-4">Benvenuto nella tua Dashboard, {{ personal_trainer.nome }}!</h3>
 
         <!-- Bottone per visualizzare gli allenamenti programmati -->
         <div class="text-center mt-4">
@@ -38,7 +43,7 @@
         </div>
 
         <div class="text-center mt-4">
-            <a href="{% url 'trainers:personal_trainer_update' pk=personal_trainer.pk %}" class="btn btn-secondary">Modifica il tuo profilo</a>
+            <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-secondary">I nostri allenatori</a>
         </div>
 
     {% else %}
@@ -50,4 +55,5 @@
     {% endif %}
 </div>
     {% endif %}
+
 {% endblock %}

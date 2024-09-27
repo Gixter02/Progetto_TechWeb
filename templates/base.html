@@ -23,7 +23,7 @@
     <!-- Navbar di base -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Palestra XYZ</a>
+            <a class="navbar-brand" href="{% url 'homepage_palestra' %}">Palestra XYZ</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -46,7 +46,10 @@
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                        <form method="POST" action="{% url 'accounts:logout' %}">
+                            {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
                     </li>
                     {% endif %}
                 </ul>
