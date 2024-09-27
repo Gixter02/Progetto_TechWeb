@@ -62,7 +62,7 @@ def allenamenti_programmati(request):
         personal_trainer = PersonalTrainer.objects.get(user=request.user)
     except PersonalTrainer.DoesNotExist:
         # Se l'utente non è un personal trainer, redireziona ad una pagina con un messaggio di errore
-        messages.error(request, "Devi essere un personal trainer per visualizzare i tuoi allenamenti.")
+        #messages.error(request, "Devi essere un personal trainer per visualizzare i tuoi allenamenti.")
         return redirect('personal_trainer_home')
 
     # Ottieni tutte le prenotazioni future per questo personal trainer

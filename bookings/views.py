@@ -13,7 +13,7 @@ def crea_prenotazione(request):
     try:
         registrato_utente = RegistratoUtente.objects.get(user=request.user)
     except RegistratoUtente.DoesNotExist:
-        messages.error(request, "Devi essere un utente registrato per effettuare una prenotazione.")
+        #messages.error(request, "Devi essere un utente registrato per effettuare una prenotazione.")
         return redirect('homepage_palestra')
 
     if request.method == 'POST':
@@ -27,7 +27,7 @@ def crea_prenotazione(request):
             try:
                 prenotazione.clean()
                 prenotazione.save()
-                messages.success(request, "Prenotazione effettuata con successo!")
+                #messages.success(request, "Prenotazione effettuata con successo!")
                 return redirect('bookings:home_page')  # Redireziona a una pagina di conferma o dashboard
             except ValidationError as e:
                 form.add_error(None, e.message)

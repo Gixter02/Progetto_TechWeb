@@ -6,15 +6,19 @@
     {% if not user.is_authenticated %}
 
     <div class="text-center mt-4">
+        <p>Ecco l'elenco dei nostri allenatori:</p>
         <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-primary">I nostri allenatori</a>
     </div>
 
     {% else %}
 <div class="container mt-5">
-    <h3 class="text-center mb-4">Il tuo profilo</h3>
 
     {% if personal_trainer %}
-        <div class="row">
+        <h3 class="text-center mb-4">Il tuo profilo</h3>
+        <div class="card">
+        <div class="card-header">
+            Dettagli di {{ personal_trainer.nome }} {{ personal_trainer.cognome }}
+        </div>
             <div class="col-md-4">
                 {% if personal_trainer.immagine_profilo %}
                     <img src="{{ personal_trainer.immagine_profilo.url }}" alt="Immagine profilo" class="img-fluid rounded-circle" style="max-width: 100%;">
@@ -23,7 +27,7 @@
                 {% endif %}
             </div>
 
-            <div class="col-md-8">
+            <div class="card-body">
                 <p><strong>Nome:</strong> {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</p>
                 <p><strong>Data di Nascita:</strong> {{ personal_trainer.data_di_nascita }}</p>
                 <p><strong>Preferenza:</strong> {{ personal_trainer.get_preferenze_display }}</p>
@@ -47,9 +51,12 @@
         </div>
 
     {% else %}
-
-        <div class="alert alert-warning mt-4">
-            <p>Non hai ancora creato il tuo profilo da personal trainer. <a href="{% url 'trainers:personal_trainer_create' %}">Clicca qui</a> per creare il tuo profilo.</p>
+        <div class="text-center mt-4">
+            <p>Ecco l'elenco dei nostri allenatori:</p>
+            <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-primary">I nostri allenatori</a>
+        </div>
+        <div class="text-center mt-4">
+            <p>Vuoi diventare un personal trainer e lavorare con noi? <a href="{% url 'trainers:personal_trainer_create' %}">Clicca qui</a> per creare il tuo profilo.</p>
         </div>
 
     {% endif %}

@@ -42,7 +42,7 @@ def allenamenti_utente(request):
         registrato_utente = RegistratoUtente.objects.get(user=request.user)
     except RegistratoUtente.DoesNotExist:
         # Se l'utente non è un utente registrato, redireziona con un messaggio di errore
-        messages.error(request, "Devi essere un utente registrato per visualizzare i tuoi allenamenti.")
+        #messages.error(request, "Devi essere un utente registrato per visualizzare i tuoi allenamenti.")
         return redirect('accounts:home_accounts')
 
     # Ottieni tutte le prenotazioni future dell'utente registrato

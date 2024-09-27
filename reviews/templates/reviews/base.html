@@ -32,9 +32,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'homepage_palestra' %}">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:home_accounts' %}">Account</a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'trainers:personal_trainer_home' %}">Allenatori</a>
                     </li>
@@ -51,6 +53,10 @@
                             <button type="submit" class="btn btn-danger">Logout</button>
                         </form>
                     </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>

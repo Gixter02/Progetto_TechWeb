@@ -33,14 +33,14 @@ def crea_recensione(request):
     try:
         personal_trainer = PersonalTrainer.objects.get(id=personal_trainer_id)
     except PersonalTrainer.DoesNotExist:
-        messages.error(request, "Il personal trainer selezionato non esiste.")
+        #messages.error(request, "Il personal trainer selezionato non esiste.")
         return redirect('reviews:homepage_recensioni')
 
     # Ottieni l'utente registrato associato all'utente loggato
     try:
         registrato_utente = RegistratoUtente.objects.get(user=request.user)
     except RegistratoUtente.DoesNotExist:
-        messages.error(request, "Devi essere un utente registrato per effettuare una prenotazione.")
+        #messages.error(request, "Devi essere un utente registrato per effettuare una prenotazione.")
         return redirect('reviews:homepage_receptioni')
 
     if request.method == 'POST':
