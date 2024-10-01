@@ -7,7 +7,7 @@
 
     <div class="text-center mt-4">
         <p>Ecco l'elenco dei nostri allenatori:</p>
-        <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-primary">I nostri allenatori</a>
+        <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary">I nostri allenatori</a>
     </div>
 
     {% else %}
@@ -47,13 +47,13 @@
         </div>
 
         <div class="text-center mt-4">
-            <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-secondary">I nostri allenatori</a>
+            <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-secondary">I nostri allenatori</a>
         </div>
 
     {% else %}
         <div class="text-center mt-4">
             <p>Ecco l'elenco dei nostri allenatori:</p>
-            <a href="{% url 'trainers:elenco_personal_trainer' %}" class="btn btn-primary">I nostri allenatori</a>
+            <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary">I nostri allenatori</a>
         </div>
         <div class="text-center mt-4">
             <p>Vuoi diventare un personal trainer e lavorare con noi? <a href="{% url 'trainers:personal_trainer_create' %}">Clicca qui</a> per creare il tuo profilo.</p>

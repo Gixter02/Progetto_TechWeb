@@ -1,24 +1,43 @@
-{% extends "trainers/base.html" %}
-
-{% block title %}Elenco Personal Trainer{% endblock %}
+{% extends 'trainers/base.html' %}
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Elenco dei Personal Trainer</h1>
-    
+    <h2 class="text-center mb-4">Elenco dei Personal Trainer</h2>
+
+    <!-- Form di ricerca per preferenze -->
+    <form method="GET" class="form-inline mb-4">
+        <div class="form-group">
+            <label for="preferenze">Filtra per preferenze:</label>
+            <select id="preferenze" name="preferenze" class="form-control ml-2">
+                <option value="" selected>-- Seleziona Preferenze --</option>
+                <option value="BB">BodyBuilding</option>
+                <option value="PL">PowerLifting</option>
+                <option value="CL">Calisthenics</option>
+                <option value="ST">StrongMen</option>
+                <option value="YG">Yoga</option>
+                <option value="PS">Pilates</option>
+                <option value="AR">Aerobico</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary ml-2">Cerca</button>
+    </form>
+
+    <!-- Lista dei Personal Trainer -->
     <ul class="list-group">
-        {% for trainer in personal_trainer_list %}
+        {% for personal_trainer in personal_trainers %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                    <h5>{{ trainer.nome }} {{ trainer.cognome }}</h5>
-                    <p><strong>Preferenze:</strong> {{ trainer.preferenze }}</p>
-                    <p><strong>Media Voti:</strong> 
-                        {% if trainer.media_voti %}
-                            {{ trainer.media_voti|floatformat:1 }} / 5
+                    <strong>{{ personal_trainer.nome }} {{ personal_trainer.cognome }}</strong>
+                    <p>Preferenze: {{ personal_trainer.get_preferenze_display }}</p>
+                </div>
+                <div>
+                    <p><strong> Voto: </strong>
+                        {% if personal_trainer.media_voto %}
+                            {{ personal_trainer.media_voto|floatformat:1 }} / 5
                             <!-- Visualizzazione delle stelle -->
                             <span>
                                 {% for i in "12345" %}
-                                    {% if forloop.counter <= trainer.media_voti %}
+                                    {% if forloop.counter <= personal_trainer.media_voto %}
                                         <i class="fas fa-star text-warning"></i> <!-- Stella piena -->
                                     {% else %}
                                         <i class="far fa-star text-warning"></i> <!-- Stella vuota -->
@@ -29,10 +48,9 @@
                             Nessuna recensione
                         {% endif %}
                     </p>
-                </div>
-                <a href="{% url 'trainers:personal_trainer_review' trainer.pk %}" class="btn btn-primary">Dettagli</a>
-            </li>
 
+                </div>
+            </li>
         {% empty %}
             <li class="list-group-item">Nessun personal trainer trovato.</li>
         {% endfor %}

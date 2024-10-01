@@ -1,16 +1,19 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Avg
+
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DetailView, TemplateView, ListView
+from django.views.generic import CreateView, UpdateView, DetailView, TemplateView
+
 
 from bookings.models import Prenotazione
 from reviews.models import Recensione
 from .models import PersonalTrainer
 from .forms import PersonalTrainerForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.utils import timezone
+from django.db.models import Avg, Case, When, Value
+from django.db.models.functions import Coalesce
+from django.db import models
 
 # View per creare un Personal Trainer
 class PersonalTrainerCreateView(LoginRequiredMixin, CreateView):
@@ -83,16 +86,6 @@ class PersonalTrainerReviewDetailView(DetailView):
         context['recensioni'] = Recensione.objects.filter(personal_trainer=self.object)
         return context
 
-def elenco_personal_trainer(request):
-    # Ottieni tutti i personal trainer e la loro media voti
-    personal_trainer_list = PersonalTrainer.objects.annotate(media_voti=Avg('recensione__voto'))
-
-    context = {
-        'personal_trainer_list': personal_trainer_list,
-    }
-    return render(request, 'trainers/personal_trainer_elenco.html', context)
-
-
 def disponibilita_personal_trainer(request, pk):
     personal_trainer = get_object_or_404(PersonalTrainer, pk=pk)
 
@@ -148,3 +141,66 @@ def disponibilita_personal_trainers(request):
     }
 
     return render(request, 'trainers/personal_trainers_disponibilita.html', context)
+
+def elenco_personal_trainers_ordinato(request):
+    # Se l'utente è autenticato e ha una preferenza
+    if request.user.is_authenticated and hasattr(request.user, 'registratoutente'):
+        preferenza_utente = request.user.registratoutente.preferenze
+    else:
+        preferenza_utente = None
+
+    # Calcolo della media voto e delle altre annotazioni
+    personal_trainers = PersonalTrainer.objects.annotate(
+        # Media generale del voto
+        media_voto=Avg('recensione__voto'),
+
+        # Media del voto da utenti con la stessa preferenza
+        media_voto_stessa_preferenza=Avg(
+            Case(
+                When(recensione__registrato_utente__preferenze=preferenza_utente, then='recensione__voto'),
+                default=None
+            )
+        ),
+
+        # Assegnare un valore 1 se la preferenza del PT coincide con quella dell'utente, 0 altrimenti
+        preferenza_match=Case(
+            When(preferenze=preferenza_utente, then=Value(1)),
+            default=Value(0),
+            output_field=models.IntegerField()
+        ),
+
+        # Media del voto lasciato da utenti con preferenza uguale a quella dell'utente loggato
+        media_voto_utente_con_preferenza=Avg(
+            Case(
+                When(
+                    recensione__registrato_utente__preferenze=preferenza_utente,
+                    then='recensione__voto'
+                ),
+                default=None
+            )
+        ),
+    )
+
+    # Ordinamento in base ai criteri definiti
+    if preferenza_utente:
+        personal_trainers = personal_trainers.order_by(
+            '-preferenza_match',  # 1. Allenatori con preferenza uguale all'utente in cima
+            '-media_voto_stessa_preferenza',  # 2. Tra questi, ordinare per media voto di utenti con stessa preferenza
+            '-media_voto_utente_con_preferenza',  # 3. Media voto lasciata da utenti con la stessa preferenza
+            '-media_voto'  # 4. Infine, ordinare per media voto generale
+        )
+    else:
+        # Se non c'è preferenza, ordina solo per media voto
+        personal_trainers = personal_trainers.order_by('-media_voto')
+
+    # Filtro per preferenza se selezionato nella query
+    preferenze_filter = request.GET.get('preferenze', None)
+    if preferenze_filter:
+        personal_trainers = personal_trainers.filter(preferenze=preferenze_filter)
+    context = {
+        'personal_trainers': personal_trainers,
+        'preferenza_utente': preferenza_utente,
+    }
+
+    return render(request, 'trainers/personal_trainer_elenco.html', context)
+
