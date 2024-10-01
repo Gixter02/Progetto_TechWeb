@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'trainers.apps.TrainersConfig',
     'bookings.apps.BookingsConfig',
     'reviews.apps.ReviewsConfig',
+    'gestione.apps.GestioneConfig',
 ]
 
 MIDDLEWARE = [
