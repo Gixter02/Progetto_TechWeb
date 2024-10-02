@@ -1,0 +1,34 @@
+{% extends 'gestione/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Dettagli della Richiesta di {{ richiesta.nome }} {{ richiesta.cognome }}</h2>
+
+    <div class="card mt-4">
+      <div class="card-body">
+        <p><strong>Nome:</strong> {{ richiesta.nome }}</p>
+        <p><strong>Cognome:</strong> {{ richiesta.cognome }}</p>
+        <p><strong>Data di nascita:</strong> {{ richiesta.data_di_nascita }}</p>
+        <p><strong>Preferenza:</strong> {{ richiesta.get_preferenze_display }}</p>
+        <p><strong>Competenze:</strong> {{ richiesta.competenze }}</p>
+        <p><strong>Data della richiesta:</strong> {{ richiesta.data_richiesta }}</p>
+        
+        {% if richiesta.immagine_profilo %}
+          <img src="{{ richiesta.immagine_profilo.url }}" class="img-fluid mt-3" alt="Foto profilo">
+        {% endif %}
+
+        <div class="mt-4">
+          <form method="post" action="{% url 'gestione:approva_personal_trainer' richiesta.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Approva</button>
+          </form>
+
+          <form method="post" action="{% url 'gestione:rifiuta_personal_trainer' richiesta.pk %}" class="mt-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Rifiuta</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

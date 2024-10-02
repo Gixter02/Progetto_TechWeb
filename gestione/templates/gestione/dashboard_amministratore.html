@@ -16,8 +16,7 @@
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 {{ richiesta.nome }} {{ richiesta.cognome }}
                 <div>
-                  <a href="{% url 'gestione:approva_personal_trainer' richiesta.pk %}" class="btn btn-success btn-sm">Approva</a>
-                  <a href="{% url 'gestione:elimina_personal_trainer' richiesta.pk %}" class="btn btn-danger btn-sm">Elimina</a>
+                  <a href="{% url 'gestione:richiesta_detail' richiesta.pk %}" class="btn btn-primary btn-sm">Dettegli</a>
                 </div>
               </li>
             {% endfor %}

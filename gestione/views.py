@@ -1,5 +1,7 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.generic import DetailView, TemplateView
 
 from trainers.models import PersonalTrainer
 from .forms import RichiestaPersonalTrainerForm
@@ -7,9 +9,6 @@ from .models import RichiestaPersonalTrainer
 
 from django.contrib.admin.views.decorators import staff_member_required
 # Create your views here.
-# views.py
-
-
 
 @login_required
 def richiesta_personal_trainer(request):
@@ -19,7 +18,7 @@ def richiesta_personal_trainer(request):
             richiesta = form.save(commit=False)
             richiesta.user = request.user
             richiesta.save()
-            return redirect('gestione:dashboard_amministratore')
+            return redirect('gestione:success')
     else:
         form = RichiestaPersonalTrainerForm()
 
@@ -41,13 +40,19 @@ def approva_personal_trainer(request, pk):
         immagine_profilo=richiesta.immagine_profilo,
     )
     richiesta.delete()
-    return redirect('gestione:dashboard_amministratore') #ridireziona a success page
+    return redirect('gestione:success')
+
+@staff_member_required
+def rifiuta_personal_trainer(request, pk):
+    richiesta_personal_trainer = get_object_or_404(RichiestaPersonalTrainer, pk=pk)
+    richiesta_personal_trainer.delete()
+    return redirect('gestione:success')
 
 @staff_member_required
 def elimina_personal_trainer(request, pk):
     personal_trainer = get_object_or_404(PersonalTrainer, pk=pk)
     personal_trainer.delete()
-    return redirect('gestione:dashboard_amministratore') #ridireziona a success page
+    return redirect('gestione:success')
 
 @staff_member_required
 def dashboard_amministratore(request):
@@ -58,3 +63,14 @@ def dashboard_amministratore(request):
         'personal_trainers': personal_trainers
     })
 
+class RichiestaDetailView(UserPassesTestMixin, DetailView):
+    model = RichiestaPersonalTrainer
+    template_name = 'gestione/richiesta_detail.html'
+    context_object_name = 'richiesta'
+
+    def test_func(self):
+        # Verifica se l'utente è un amministratore
+        return self.request.user.is_staff
+
+class SuccessPageView(TemplateView):
+    template_name = 'gestione/success.html'

@@ -1,0 +1,15 @@
+{% extends 'gestione/base.html' %}
+
+{% block content %}
+  <div class="container mt-5 text-center">
+    <div class="alert alert-success" role="alert">
+      <h4 class="alert-heading">Operazione completata con successo!</h4>
+      <hr>
+        {% if user.is_staff %}
+            <a href="{% url 'gestione:dashboard_amministratore' %}" class="btn btn-primary mt-3">Torna alla dashboard</a>
+        {% else %}
+            <a href="{% url 'homepage_palestra' %}" class="btn btn-primary mt-3">Torna alla homepage</a>
+        {% endif %}
+    </div>
+  </div>
+{% endblock %}
