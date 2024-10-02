@@ -30,7 +30,9 @@
                     <strong>{{ personal_trainer.nome }} {{ personal_trainer.cognome }}</strong>
                     <p>Preferenze: {{ personal_trainer.get_preferenze_display }}</p>
                 </div>
+
                 <div>
+                    <a href="{% url 'trainers:personal_trainer_review' personal_trainer.pk %}" class="btn btn-primary mt-3">Dettagli</a>
                     <p><strong> Voto: </strong>
                         {% if personal_trainer.media_voto %}
                             {{ personal_trainer.media_voto|floatformat:1 }} / 5
