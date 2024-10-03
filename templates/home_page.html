@@ -65,6 +65,21 @@
         </div>
       </div>
     </div>
+      {% if user.is_staff %}
+        <div class="row mt-4">
+      <!-- Sezione Gestione -->
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Gestione</h5>
+            <p class="card-text">Sezione dedicata alla gestione della palestra.</p>
+            <a href="{% url 'gestione:dashboard_amministratore' %}" class="btn btn-primary">Vai alla sezione Gestione</a>
+          </div>
+        </div>
+      </div>
+
+      {% endif %}
+  </div>
   </div>
 
 </body>
