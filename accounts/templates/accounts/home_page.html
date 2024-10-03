@@ -56,7 +56,9 @@
 
         <!-- Se l'utente è già autenticato -->
         {% if user.is_authenticated and not "ok" in request.GET.login%}
-
+            <div class="text-center mt-4">
+                <p>Benvenuto {{ user.username }}, ecco la sezione dedicata al tuo profilo.</p>
+            </div>
         {% if not user.registratoutente %}
             <div class="alert alert-warning text-center mt-4">
                 <p>Completa il tuo profilo per accedere a tutte le funzionalità.</p>
