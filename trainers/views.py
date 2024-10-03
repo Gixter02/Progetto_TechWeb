@@ -12,19 +12,7 @@ from .forms import PersonalTrainerForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.db.models import Avg, Case, When, Value
-from django.db.models.functions import Coalesce
 from django.db import models
-
-# View per creare un Personal Trainer
-class PersonalTrainerCreateView(LoginRequiredMixin, CreateView):
-    model = PersonalTrainer
-    form_class = PersonalTrainerForm
-    template_name = 'trainers/personal_trainer_form.html'
-    success_url = reverse_lazy('trainers:personal_trainer_home')  # Reindirizzamento dopo la creazione
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user  # Associa l'utente autenticato
-        return super().form_valid(form)
 
 # View per modificare i dati del Personal Trainer
 class PersonalTrainerUpdateView(LoginRequiredMixin, UpdateView):

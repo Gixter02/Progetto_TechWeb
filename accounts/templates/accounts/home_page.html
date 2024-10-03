@@ -6,8 +6,8 @@
     <div class="container mt-5">
         <!-- Header della pagina -->
         <div class="text-center">
-            <h1 class="display-4">Benvenuto nella Nostra Palestra!</h1>
-            <p class="lead">Il tuo luogo ideale per raggiungere i tuoi obiettivi di fitness.</p>
+            <h1 class="display-4">Benvenuto nella sezione Account!</h1>
+            <p class="lead">Visualizza le informazioni riguardanti il tuo profilo.</p>
         </div>
 
         <!-- Se l'utente non è autenticato -->
@@ -30,7 +30,7 @@
 
         {% if not user.registratoutente %}
             <div class="alert alert-warning text-center mt-4">
-                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed altre funzioni.</p>
+                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed effettuare recensioni.</p>
                 <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
             </div>
 
@@ -61,7 +61,7 @@
             </div>
         {% if not user.registratoutente %}
             <div class="alert alert-warning text-center mt-4">
-                <p>Completa il tuo profilo per accedere a tutte le funzionalità.</p>
+                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed effettuare recensioni.</p>
                 <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
             </div>
 
