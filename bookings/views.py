@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.generic import TemplateView
+
 from .forms import PrenotazioneForm
 from .models import RegistratoUtente, Prenotazione
 
@@ -28,7 +30,7 @@ def crea_prenotazione(request):
                 prenotazione.clean()
                 prenotazione.save()
                 #messages.success(request, "Prenotazione effettuata con successo!")
-                return redirect('bookings:home_page')  # Redireziona a una pagina di conferma o dashboard
+                return redirect('bookings:success_page')  # Redireziona a una pagina di conferma o dashboard
             except ValidationError as e:
                 form.add_error(None, e.message)
 
@@ -43,3 +45,6 @@ def bookings_homepage(request):
     prenotazioni = Prenotazione.objects.filter(registrato_utente__user=request.user).order_by('data_prenotazione', 'fascia_oraria')
 
     return render(request, 'bookings/bookings_homepage.html', {'prenotazioni': prenotazioni})
+
+class SuccessPageView(TemplateView):
+    template_name = 'bookings/success.html'

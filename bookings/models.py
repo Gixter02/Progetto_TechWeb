@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-
+from django.utils import timezone
 from accounts.models import RegistratoUtente
 from trainers.models import PersonalTrainer
 
@@ -31,10 +31,12 @@ class Prenotazione(models.Model):
     fascia_oraria = models.IntegerField(choices=ORARI_FASCIA)
     data_prenotazione = models.DateField()
 
-    class Meta:
-        unique_together = ('personal_trainer', 'fascia_oraria', 'data_prenotazione')
-
     def clean(self):
+        # Controlla se la prenotazione è per una data nel passato o per oggi
+        if self.data_prenotazione <= timezone.now().date():
+            raise ValidationError(
+                "Non puoi effettuare una prenotazione per oggi o per una data passata. Scegli una data futura.")
+
         # Controllo se c'è già una prenotazione per il personal trainer nella stessa fascia oraria
         if Prenotazione.objects.filter(
                 personal_trainer=self.personal_trainer,
@@ -47,4 +49,5 @@ class Prenotazione(models.Model):
         return f"Prenotazione di {self.registrato_utente.user.username} con {self.personal_trainer.nome} alle {self.get_fascia_oraria_display()} del {self.data_prenotazione}"
 
     class Meta:
+        unique_together = ('personal_trainer', 'fascia_oraria', 'data_prenotazione')
         verbose_name_plural = "Prenotazioni"

@@ -1,0 +1,11 @@
+{% extends 'bookings/base.html' %}
+
+{% block content %}
+  <div class="container mt-5 text-center">
+    <div class="alert alert-success" role="alert">
+      <h4 class="alert-heading">Prenotazione effettuata con successo!</h4>
+      <hr>
+            <a href="{% url 'homepage_palestra' %}" class="btn btn-primary mt-3">Homepage</a> <a href="{% url 'bookings:home_page' %}" class="btn btn-primary mt-3">Prenotazioni</a>
+    </div>
+  </div>
+{% endblock %}
