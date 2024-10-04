@@ -2,23 +2,40 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Crea una Prenotazione</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Crea una Prenotazione</h2>
 
-  <form method="POST" class="mx-auto" style="max-width: 600px;">
-    {% csrf_token %}
+          <form method="POST" class="mx-auto">
+            {% csrf_token %}
 
-    <!-- Form con styling di Bootstrap -->
-    <div class="form-group mb-3">
-      {{ form.as_p }}
-    </div>
+            <!-- Form con styling di Bootstrap -->
+            <div class="form-group text-center mb-3">
+              {{ form.as_p }}
+            </div>
 
-    <!-- Bottone di invio stilizzato con Bootstrap -->
-    <div class="text-center">
-      <button type="submit" class="btn btn-primary">Prenota</button>
+            <!-- Bottone di invio stilizzato con Bootstrap -->
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary btn-lg">Prenota</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Link di navigazione con descrizioni testuali -->
+      <div class="text-center mt-4">
+        <div class="mb-3">
+          <p>Scopri tutti i nostri Personal Trainer disponibili nella palestra:</p>
+          <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-outline-primary">Lista Personal Trainer</a>
+        </div>
+        <div>
+          <p>Verifica la disponibilità dei Personal Trainer per trovare il momento giusto per prenotare:</p>
+          <a href="{% url 'trainers:disponibilita_personal_trainers' %}" class="btn btn-outline-primary">Verifica Disponibilità</a>
+        </div>
+      </div>
     </div>
-  </form>
-    <div class="text-center mt-4">
-        <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary">I nostri allenatori</a> <a href="{% url 'trainers:disponibilita_personal_trainers' %}" class="btn btn-primary">Verifica disponibilità</a>
-    </div>
+  </div>
 </div>
 {% endblock %}
