@@ -1,102 +1,135 @@
 {% extends "accounts/base.html" %}
 
-{% block title %} Homepage Account {% endblock %}
+{% block title %}Homepage Account{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <!-- Header della pagina -->
-        <div class="text-center">
-            <h1 class="display-4">Benvenuto nella sezione Account!</h1>
-            <p class="lead">Visualizza le informazioni riguardanti il tuo profilo.</p>
-        </div>
+<div class="container mt-5">
+    <!-- Header della pagina -->
+    <div class="text-center">
+        <h1 class="display-4">Benvenuto nella sezione Account!</h1>
+        <p class="lead">Visualizza le informazioni riguardanti il tuo profilo e scopri tutte le nostre attività.</p>
+    </div>
 
-        <!-- Se l'utente non è autenticato -->
-        {% if not user.is_authenticated %}
+    <!-- Se l'utente non è autenticato -->
+    {% if not user.is_authenticated %}
+    <div class="alert alert-warning text-center mt-4">
+        <p>Non sei autenticato. Accedi per gestire il tuo profilo e scoprire tutte le nostre attività.</p>
+        <form method="POST" action="{% url 'accounts:login' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+        </form>
+        <p class="mt-2">Non hai un account? <a href="{% url 'accounts:creautente' %}">Registrati qui</a>.</p>
+    </div>
+    {% endif %}
+
+    <!-- Se il login ha avuto successo -->
+    {% if user.is_authenticated and "ok" in request.GET.login %}
+    <div class="alert alert-success text-center mt-4">
+        <p>La procedura di login è andata a buon fine! Benvenuto/a, {{ user.username }}.</p>
+    </div>
+
+    {% if not user.registratoutente %}
         <div class="alert alert-warning text-center mt-4">
-            <p>Non sei autenticato. Accedi per gestire il tuo profilo e scoprire tutte le nostre attività.</p>
-            <form method="POST" action="{% url 'accounts:login' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
-            <p class="mt-2">Non hai un account? <a href="{% url 'accounts:creautente' %}">Registrati qui</a>.</p>
+            <p>Completa il tuo profilo per accedere a tutte le funzioni.</p>
+            <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary btn-lg">Completa il Profilo</a>
+            <p class="mt-2">Fornisci informazioni aggiuntive per migliorare la tua esperienza.</p>
         </div>
-        {% endif %}
-
-        <!-- Se il login ha avuto successo -->
-        {% if user.is_authenticated and "ok" in request.GET.login %}
-        <div class="alert alert-success text-center mt-4">
-            <p>La procedura di login è andata a buon fine! Benvenuto/a, {{ user.username }}.</p>
-        </div>
-
-        {% if not user.registratoutente %}
-            <div class="alert alert-warning text-center mt-4">
-                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed effettuare recensioni.</p>
-                <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
-            </div>
-
-            {% else %}
-
+    {% else %}
         <div class="user-options mt-4">
             <h3 class="text-center">Le tue opzioni:</h3>
             <div class="row text-center mt-3">
-                <div class="col">
-                    <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary">Visualizza il tuo profilo</a>
+                <div class="col-md-4">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Visualizza il tuo profilo</h5>
+                            <p class="card-text">Controlla e aggiorna le tue informazioni personali.</p>
+                            <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary btn-lg">Visualizza</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col">
-                    <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-outline-secondary">Prenota un allenamento</a>
+                <div class="col-md-4">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Prenota un allenamento</h5>
+                            <p class="card-text">Prenota una sessione con il tuo personal trainer.</p>
+                            <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-outline-secondary btn-lg">Prenota</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col">
-                    <a href="{% url 'reviews:crea_recensione' %}" class="btn btn-outline-secondary">Inserisci una recensione</a>
+                <div class="col-md-4">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Inserisci una recensione</h5>
+                            <p class="card-text">Lascia un feedback sul tuo allenamento.</p>
+                            <a href="{% url 'reviews:crea_recensione' %}" class="btn btn-outline-secondary btn-lg">Inserisci</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    {% endif %}
+    {% endif %}
 
-            {% endif %}
-        {% endif %}
+    <!-- Se l'utente è già autenticato -->
+    {% if user.is_authenticated and not "ok" in request.GET.login %}
+    <div class="text-center mt-4">
+        <p>Benvenuto {{ user.username }}, ecco la sezione dedicata al tuo profilo.</p>
+    </div>
 
-        <!-- Se l'utente è già autenticato -->
-        {% if user.is_authenticated and not "ok" in request.GET.login%}
-            <div class="text-center mt-4">
-                <p>Benvenuto {{ user.username }}, ecco la sezione dedicata al tuo profilo.</p>
-            </div>
-        {% if not user.registratoutente %}
-            <div class="alert alert-warning text-center mt-4">
-                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed effettuare recensioni.</p>
-                <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
-            </div>
-
-            {% else %}
-
+    {% if not user.registratoutente %}
+        <div class="alert alert-warning text-center mt-4">
+            <p>Completa il tuo profilo per accedere a tutte le funzioni.</p>
+            <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary btn-lg">Completa il Profilo</a>
+            <p class="mt-2">Fornisci informazioni aggiuntive per migliorare la tua esperienza.</p>
+        </div>
+    {% else %}
         <div class="user-options mt-4">
             <h3 class="text-center">Esplora:</h3>
             <div class="row text-center mt-3">
-                <div class="col">
-                    <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary">Visualizza il tuo profilo</a>
+                <div class="col-md-4">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Visualizza il tuo profilo</h5>
+                            <p class="card-text">Controlla e aggiorna le tue informazioni personali.</p>
+                            <a href="{% url 'accounts:profilo' user.registratoutente.pk %}" class="btn btn-outline-secondary btn-lg">Visualizza</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col">
-                    <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-outline-secondary">Prenota un allenamento</a>
+                <div class="col-md-4">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Prenota un allenamento</h5>
+                            <p class="card-text">Prenota una sessione con il tuo personal trainer.</p>
+                            <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-outline-secondary btn-lg">Prenota</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col">
-                    <a href="{% url 'reviews:homepage_recensioni' %}" class="btn btn-outline-secondary">Inserisci una recensione</a>
+                <div class="col-md-4">
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Inserisci una recensione</h5>
+                            <p class="card-text">Lascia un feedback sul tuo allenamento.</p>
+                            <a href="{% url 'reviews:homepage_recensioni' %}" class="btn btn-outline-secondary btn-lg">Inserisci</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        {% endif %}
-            <!-- Sezione per i personal trainer -->
-        <div class="text-center mt-5">
-            <h3>Sezione Allenatori</h3>
-            {% if user.is_authenticated %}
-                <a href="{% url 'trainers:personal_trainer_home'%}" class="btn btn-primary mt-3">Vai ai Personal Trainer</a>
-            {% endif %}
-        </div>
+    {% endif %}
 
+    <!-- Sezione per i personal trainer -->
+    <div class="text-center mt-5">
+        <h3>Sezione Allenatori</h3>
+        {% if user.is_authenticated %}
+            <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary btn-lg mt-3">Vai ai Personal Trainer</a>
+            <p class="text-muted">Scopri i profili dei nostri allenatori disponibili.</p>
         {% endif %}
-
     </div>
+
+    {% endif %}
+</div>
 {% endblock %}
-
 {% block footer %}
-
 <div class="container text-center mt-5">
     <p class="text-muted">&copy; 2024 - La tua palestra</p>
 </div>

@@ -2,65 +2,81 @@
 {% load static %}
 
 {% block content %}
-    <h1 class="text-center mb-4">Benvenuto nella sezione Allenatori!</h1>
-    {% if not user.is_authenticated %}
-
-    <div class="text-center mt-4">
-        <p>Ecco l'elenco dei nostri allenatori:</p>
-        <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary">I nostri allenatori</a>
-    </div>
-
-    {% else %}
 <div class="container mt-5">
+    <h1 class="text-center mb-4">Benvenuto nella sezione Allenatori!</h1>
 
-    {% if personal_trainer %}
-        <h3 class="text-center mb-4">Il tuo profilo</h3>
-        <div class="card">
-        <div class="card-header">
-            Dettagli di {{ personal_trainer.nome }} {{ personal_trainer.cognome }}
-        </div>
-            <div class="col-md-4">
-                {% if personal_trainer.immagine_profilo %}
-                    <img src="{{ personal_trainer.immagine_profilo.url }}" alt="Immagine profilo" class="img-fluid rounded-circle" style="max-width: 100%;">
-                {% else %}
-                    <img src="{% static 'imgs/mia_foto.jpeg' %}" alt="Immagine profilo" class="img-fluid rounded-circle" style="max-width: 100%;">
-                {% endif %}
-            </div>
-
-            <div class="card-body">
-                <p><strong>Nome:</strong> {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</p>
-                <p><strong>Data di Nascita:</strong> {{ personal_trainer.data_di_nascita }}</p>
-                <p><strong>Preferenza:</strong> {{ personal_trainer.get_preferenze_display }}</p>
-                <p><strong>Bio:</strong> {{ personal_trainer.bio }}</p>
-                <p><strong>Competenze:</strong> {{ personal_trainer.competenze }}</p>
-            </div>
-        </div>
+    {% if not user.is_authenticated %}
         <div class="text-center mt-4">
-            <a href="{% url 'trainers:personal_trainer_update' pk=personal_trainer.pk %}" class="btn btn-secondary">Modifica il tuo profilo</a>
+            <p>Esplora i profili dei nostri Personal Trainer per trovare quello perfetto per te.</p>
+            <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary btn-lg">
+                I nostri allenatori
+            </a>
         </div>
-        <hr class="my-4">
-        <h3 class="text-center mb-4">Benvenuto nella tua Dashboard, {{ personal_trainer.nome }}!</h3>
-
-        <!-- Bottone per visualizzare gli allenamenti programmati -->
-        <div class="text-center mt-4">
-            <a href="{% url 'trainers:allenamenti_programmati' %}" class="btn btn-primary">Visualizza i tuoi allenamenti programmati</a>
-        </div>
-
-        <div class="text-center mt-4">
-            <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-secondary">I nostri allenatori</a>
-        </div>
-
     {% else %}
-        <div class="text-center mt-4">
-            <p>Ecco l'elenco dei nostri allenatori:</p>
-            <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary">I nostri allenatori</a>
-        </div>
-        <div class="text-center mt-4">
-            <p>Vuoi diventare un personal trainer e lavorare con noi? <a href="{% url 'gestione:richiesta_personal_trainer' %}">Clicca qui</a> per effettuare la richiesta.</p>
-        </div>
+        {% if personal_trainer %}
+            <h3 class="text-center mb-4">Il tuo profilo</h3>
+            <div class="card shadow-sm">
+                <div class="card-header text-center">
+                    <strong>Dettagli di {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            {% if personal_trainer.immagine_profilo %}
+                                <img src="{{ personal_trainer.immagine_profilo.url }}" alt="Immagine profilo" class="img-fluid rounded-circle mb-3" style="max-width: 150px;">
+                            {% else %}
+                                <img src="{% static 'imgs/mia_foto.jpeg' %}" alt="Immagine profilo" class="img-fluid rounded-circle mb-3" style="max-width: 150px;">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <p><strong>Nome:</strong> {{ personal_trainer.nome }} {{ personal_trainer.cognome }}</p>
+                            <p><strong>Data di Nascita:</strong> {{ personal_trainer.data_di_nascita|date:"d/m/Y" }}</p>
+                            <p><strong>Preferenza:</strong> {{ personal_trainer.get_preferenze_display }}</p>
+                            <p><strong>Bio:</strong> {{ personal_trainer.bio }}</p>
+                            <p><strong>Competenze:</strong> {{ personal_trainer.competenze }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="text-center mt-4">
+                <a href="{% url 'trainers:personal_trainer_update' pk=personal_trainer.pk %}" class="btn btn-secondary btn-lg">
+                    Modifica il tuo profilo
+                </a>
+                <p class="text-muted mt-2">Aggiorna le tue informazioni personali e competenze.</p>
+            </div>
+
+            <hr class="my-5">
+
+            <h3 class="text-center mb-4">Benvenuto nella tua Dashboard, {{ personal_trainer.nome }}!</h3>
+
+            <!-- Bottone per visualizzare gli allenamenti programmati -->
+            <div class="text-center mt-4">
+                <a href="{% url 'trainers:allenamenti_programmati' %}" class="btn btn-primary btn-lg">
+                    Visualizza i tuoi allenamenti programmati
+                </a>
+                <p class="text-muted mt-2">Controlla gli allenamenti che hai in programma con i tuoi clienti.</p>
+            </div>
+
+            <!-- Bottone per esplorare altri allenatori -->
+            <div class="text-center mt-4">
+                <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-secondary btn-lg">
+                    Visualizza gli altri allenatori
+                </a>
+                <p class="text-muted mt-2">Esplora il profilo degli altri Personal Trainer della palestra.</p>
+            </div>
+        {% else %}
+            <div class="text-center mt-4">
+                <p>Esplora i profili dei nostri Personal Trainer per trovare quello giusto per te.</p>
+                <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary btn-lg">
+                    I nostri allenatori
+                </a>
+            </div>
+
+            <div class="text-center mt-4">
+                <p>Vuoi unirti al nostro team come Personal Trainer? <a href="{% url 'gestione:richiesta_personal_trainer' %}">Clicca qui</a> per effettuare la richiesta.</p>
+            </div>
+        {% endif %}
     {% endif %}
 </div>
-    {% endif %}
-
 {% endblock %}

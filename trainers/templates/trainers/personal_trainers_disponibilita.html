@@ -4,37 +4,48 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Controlla Disponibilità</h1>
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4">Controlla Disponibilità</h1>
 
-    <form method="post" class="mb-4">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="personal_trainer">Seleziona un Personal Trainer:</label>
-            <select name="personal_trainer" class="form-control" required>
-                <option value="">-- Seleziona --</option>
-                {% for trainer in personal_trainer_list %}
-                    <option value="{{ trainer.pk }}">{{ trainer.nome }} {{ trainer.cognome }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="data">Seleziona una data:</label>
-            <input type="date" name="data" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Controlla Disponibilità</button>
-    </form>
+            <!-- Form di selezione del trainer e data -->
+            <form method="post" class="mb-4">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="personal_trainer" class="form-label">Seleziona un Personal Trainer:</label>
+                    <select name="personal_trainer" class="form-select" required>
+                        <option value="" disabled selected>-- Seleziona --</option>
+                        {% for trainer in personal_trainer_list %}
+                            <option value="{{ trainer.pk }}">{{ trainer.nome }} {{ trainer.cognome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-    {% if fasce_disponibili %}
-        <h2 class="mt-4">Fasce Orarie Disponibili per {{ selected_trainer.nome }} il {{ selected_date }}:</h2>
-        <ul class="list-group">
-            {% for fascia in fasce_disponibili %}
-                <li class="list-group-item">{{ fascia.1 }}</li>  <!-- Il valore 1 è il testo della fascia oraria -->
-            {% endfor %}
-        </ul>
-    {% elif selected_date and selected_trainer %}
-        <div class="alert alert-warning mt-4">
-            <p>Non ci sono disponibilità per {{ selected_trainer.nome }} il {{ selected_date }}.</p>
+                <div class="form-group mb-3">
+                    <label for="data" class="form-label">Seleziona una data:</label>
+                    <input type="date" name="data" class="form-control" required>
+                </div>
+
+                <!-- Bottone per controllare disponibilità -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">Controlla Disponibilità</button>
+                </div>
+            </form>
+
+            <!-- Risultati fasce orarie disponibili -->
+            {% if fasce_disponibili %}
+                <h2 class="text-center">Fasce Orarie Disponibili per {{ selected_trainer.nome }} il {{ selected_date }}:</h2>
+                <ul class="list-group mt-3">
+                    {% for fascia in fasce_disponibili %}
+                        <li class="list-group-item list-group-item-success text-center">{{ fascia.1 }}</li>
+                    {% endfor %}
+                </ul>
+            {% elif selected_date and selected_trainer %}
+                <div class="alert alert-warning text-center mt-4">
+                    <p>Non ci sono disponibilità per {{ selected_trainer.nome }} il {{ selected_date }}.</p>
+                </div>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

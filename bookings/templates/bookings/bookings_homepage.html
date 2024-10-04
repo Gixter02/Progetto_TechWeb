@@ -2,47 +2,71 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Le tue Prenotazioni</h2>
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Le tue Prenotazioni</h2>
 
-{% if not user.registratoutente %}
-            <div class="alert alert-warning text-center mt-4">
-                <p>Completa il tuo profilo per accedere poter prenotare allenamenti ed altre funzioni.</p>
-                <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
-            </div>
-{% else %}
+            {% if not user.registratoutente %}
+                <div class="alert alert-warning text-center mt-4">
+                    <p>Completa il tuo profilo per accedere alle funzionalità di prenotazione.</p>
+                    <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
+                </div>
+            {% else %}
 
-  {% if prenotazioni %}
-    <table class="table table-striped table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>Data</th>
-          <th>Orario</th>
-          <th>Personal Trainer</th>
-          <th>Richieste Specifiche</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for prenotazione in prenotazioni %}
-          <tr>
-            <td>{{ prenotazione.data_prenotazione }}</td>
-            <td>{{ prenotazione.get_fascia_oraria_display }}</td>
-            <td>{{ prenotazione.personal_trainer.nome }} {{ prenotazione.personal_trainer.cognome }}</td>
-            <td>{{ prenotazione.richieste_specifiche|default:"Nessuna" }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  {% else %}
-    <div class="alert alert-warning text-center" role="alert">
-      Non hai ancora effettuato alcuna prenotazione.
+                {% if prenotazioni %}
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Data</th>
+                                <th>Orario</th>
+                                <th>Personal Trainer</th>
+                                <th>Richieste Specifiche</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prenotazione in prenotazioni %}
+                                <tr>
+                                    <td>{{ prenotazione.data_prenotazione|date:"d/m/Y" }}</td>
+                                    <td>{{ prenotazione.get_fascia_oraria_display }}</td>
+                                    <td>{{ prenotazione.personal_trainer.nome }} {{ prenotazione.personal_trainer.cognome }}</td>
+                                    <td>{{ prenotazione.richieste_specifiche|default:"Nessuna" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert alert-warning text-center" role="alert">
+                        Non hai ancora effettuato alcuna prenotazione.
+                    </div>
+                {% endif %}
+
+                <div class="text-center mt-4">
+                    <!-- Bottone per prenotare un nuovo allenamento -->
+                    <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-primary btn-lg mb-2">
+                        Prenota un nuovo allenamento
+                    </a>
+                    <p class="text-muted">Effettua una nuova prenotazione per una sessione di allenamento.</p>
+
+                    <!-- Bottone per modificare prenotazioni esistenti -->
+                    <a href="{% url 'bookings:modifica_prenotazioni' %}" class="btn btn-secondary btn-lg mb-4">
+                        Modifica le tue prenotazioni
+                    </a>
+                    <p class="text-muted">Modifica le prenotazioni esistenti o elimina quelle non più necessarie.</p>
+
+                    <!-- Bottone per verificare la disponibilità dei personal trainer -->
+                    <a href="{% url 'trainers:disponibilita_personal_trainers' %}" class="btn btn-info btn-lg mb-2">
+                        Verifica disponibilità
+                    </a>
+                    <p class="text-muted">Controlla le fasce orarie disponibili per i nostri Personal Trainer.</p>
+
+                    <!-- Bottone per visualizzare la lista dei Personal Trainer -->
+                    <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-light btn-lg mb-4">
+                        Visualizza i Personal Trainer
+                    </a>
+                    <p class="text-muted">Esplora la lista dei Personal Trainer disponibili presso la nostra palestra.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
-  {% endif %}
-
-  <div class="text-center mt-4">
-    <a href="{% url 'bookings:crea_prenotazione' %}" class="btn btn-primary">Prenota un nuovo allenamento</a>
-    <a href="{% url 'bookings:modifica_prenotazioni' %}" class="btn btn-secondary">Modifica le tue prenotazioni</a>
-  </div>
 </div>
-
-    {% endif %}
 {% endblock %}
