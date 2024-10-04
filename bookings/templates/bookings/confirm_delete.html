@@ -1,0 +1,21 @@
+{% extends 'bookings/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Conferma cancellazione della prenotazione</h2>
+    
+    <p>Sei sicuro di voler cancellare questa prenotazione?</p>
+    
+    <ul>
+      <li><strong>Personal Trainer:</strong> {{ object.personal_trainer.nome }} {{ object.personal_trainer.cognome }}</li>
+      <li><strong>Data Prenotazione:</strong> {{ object.data_prenotazione }}</li>
+      <li><strong>Fascia Oraria:</strong> {{ object.get_fascia_oraria_display }}</li>
+    </ul>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Conferma</button>
+      <a href="{% url 'bookings:home_page' %}" class="btn btn-secondary">Annulla</a>
+    </form>
+  </div>
+{% endblock %}

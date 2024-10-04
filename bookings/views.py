@@ -1,9 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 # Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, DeleteView
 
 from .forms import PrenotazioneForm
 from .models import RegistratoUtente, Prenotazione
@@ -48,3 +50,21 @@ def bookings_homepage(request):
 
 class SuccessPageView(TemplateView):
     template_name = 'bookings/success.html'
+
+class PrenotazioneDeleteView(LoginRequiredMixin, DeleteView):
+    model = Prenotazione
+    template_name = 'bookings/confirm_delete.html'
+    success_url = reverse_lazy('bookings:success_page')
+
+    # Aggiungere il controllo per permettere solo al proprietario della prenotazione di cancellarla
+    def get_queryset(self):
+        # Limita le prenotazioni cancellabili solo a quelle dell'utente loggato
+        queryset = super().get_queryset()
+        return queryset.filter(registrato_utente__user=self.request.user)
+
+@login_required
+def elimina_prenotazioni(request):
+    # Ottieni le prenotazioni fatte dall'utente loggato
+    prenotazioni = Prenotazione.objects.filter(registrato_utente__user=request.user).order_by('data_prenotazione', 'fascia_oraria')
+
+    return render(request, 'bookings/elimina_prenotazioni.html', {'prenotazioni': prenotazioni})

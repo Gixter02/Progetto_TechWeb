@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Le tue prenotazioni</h2>
+
+    {% if prenotazioni %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Personal Trainer</th>
+            <th>Data Prenotazione</th>
+            <th>Fascia Oraria</th>
+            <th>Azione</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prenotazione in prenotazioni %}
+            <tr>
+              <td>{{ prenotazione.personal_trainer.nome }} {{ prenotazione.personal_trainer.cognome }}</td>
+              <td>{{ prenotazione.data_prenotazione }}</td>
+              <td>{{ prenotazione.get_fascia_oraria_display }}</td>
+              <td>
+                <a href="{% url 'bookings:prenotazione_delete' prenotazione.pk %}" class="btn btn-danger">Cancella</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>Non hai prenotazioni attive.</p>
+    {% endif %}
+    
+    <a href="{% url 'bookings:home_page' %}" class="btn btn-primary">Torna alla Home</a>
+  </div>
+{% endblock %}
