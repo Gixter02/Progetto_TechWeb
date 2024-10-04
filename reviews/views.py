@@ -30,7 +30,7 @@ def crea_recensione(request):
 
     if not personal_trainer_id:
         # Se manca il parametro, invia un messaggio di errore
-        messages.error(request, "Personal trainer non selezionato.")
+        #messages.error(request, "Personal trainer non selezionato.")
         return redirect('reviews:homepage_recensioni')  # Reindirizza alla homepage delle recensioni o a una pagina d'errore
 
     # Recupera il personal trainer selezionato, gestendo l'eccezione nel caso in cui l'ID non sia valido
@@ -55,7 +55,7 @@ def crea_recensione(request):
                 recensione.registrato_utente = registrato_utente  # Assegna l'utente loggato
                 recensione.personal_trainer = personal_trainer  # Assegna il personal trainer selezionato
                 recensione.save()
-                messages.success(request, 'Recensione registrata con successo')
+                #messages.success(request, 'Recensione registrata con successo')
                 return redirect('reviews:review_success')  # Redireziona ad una pagina di successo
             except IntegrityError:
                 messages.error(request, "Hai già lasciato una recensione per questo personal trainer.")

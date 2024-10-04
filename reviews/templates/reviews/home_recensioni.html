@@ -1,39 +1,48 @@
 {% extends 'reviews/base.html' %}
 
 {% block content %}
-    <title>Homepage Recensioni</title>
-    <body>
-        <div class="container mt-4 d-flex justify-content-center" style="min-height: 80vh;">
+<title>Homepage Recensioni</title>
+<body>
+    <div class="container mt-5" style="min-height: 80vh;">
+        <div class="row justify-content-center">
             <div class="col-md-8">
-                <h2 class="text-center">Homepage delle Recensioni</h2>
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Homepage delle Recensioni</h2>
 
-                <p class="text-center">Vuoi lasciare una recensione per un personal trainer?</p>
+                        <p class="text-center text-muted">Vuoi lasciare una recensione per un personal trainer?</p>
 
-                {% if not user.registratoutente %}
-                    <div class="alert alert-warning text-center mt-4">
-                        <p>Completa il tuo profilo per lasciare una recensione.</p>
-                        <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
+                        {% if not user.registratoutente %}
+                            <div class="alert alert-warning text-center">
+                                <p class="mb-3">Completa il tuo profilo per lasciare una recensione.</p>
+                                <a href="{% url 'accounts:inserimento_dati_utente' %}" class="btn btn-primary">Completa il Profilo</a>
+                            </div>
+                        {% else %}
+                            <form method="GET" action="crea/{{ personal_trainer.id }}">
+                                <div class="form-group">
+                                    <label for="personal_trainer" class="form-label">Seleziona il Personal Trainer:</label>
+                                    <select id="personal_trainer" name="personal_trainer" class="form-control" required>
+                                        <option value="" disabled selected>-- Seleziona un Personal Trainer --</option>
+                                        {% for personal_trainer in personal_trainers %}
+                                            <option value="{{ personal_trainer.id }}">{{ personal_trainer.nome }} {{ personal_trainer.cognome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary mt-3">Lascia una Recensione</button>
+                                </div>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <p class="mb-3">Hai già lasciato delle recensioni? Puoi visualizzarle, modificarle o eliminarle.</p>
+                                <a href="{% url 'reviews:lista_recensioni' %}" class="btn btn-secondary">Lista Recensioni</a>
+                            </div>
+                        {% endif %}
                     </div>
-                {% else %}
-                    <form method="GET" action="crea/{{ personal_trainer.id }}">
-                        <div class="form-group">
-                            <label for="personal_trainer">Seleziona il Personal Trainer:</label>
-                            <select id="personal_trainer" name="personal_trainer" class="form-control">
-                                <option value="" disabled selected>-- Seleziona un Personal Trainer --</option>
-                                {% for personal_trainer in personal_trainers %}
-                                    <option value="{{ personal_trainer.id }}">{{ personal_trainer.nome }} {{ personal_trainer.cognome }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary mt-3">Lascia una Recensione</button>
-                        </div>
-                    </form>
-                    <p class="text-center">Vuoi guardare le recensioni che hai lasciato ai nostri allenatori?</p>
-                    <a href="{% url 'reviews:lista_recensioni' %}" class="btn btn-primary">Lista Recensioni</a>
-                {% endif %}
+                </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
 {% endblock %}
