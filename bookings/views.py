@@ -5,9 +5,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, DeleteView
+from django.views.generic import TemplateView, DeleteView, UpdateView
 
-from .forms import PrenotazioneForm
+from .forms import PrenotazioneForm, PrenotazioneUpdateForm
 from .models import RegistratoUtente, Prenotazione
 
 
@@ -29,7 +29,7 @@ def crea_prenotazione(request):
 
             # Verifica che non ci siano prenotazioni per la stessa fascia oraria e trainer
             try:
-                prenotazione.clean()
+                prenotazione.clean(registrato_utente)
                 prenotazione.save()
                 #messages.success(request, "Prenotazione effettuata con successo!")
                 return redirect('bookings:success_page')  # Redireziona a una pagina di conferma o dashboard
@@ -63,8 +63,17 @@ class PrenotazioneDeleteView(LoginRequiredMixin, DeleteView):
         return queryset.filter(registrato_utente__user=self.request.user)
 
 @login_required
-def elimina_prenotazioni(request):
+def modifica_prenotazioni(request):
     # Ottieni le prenotazioni fatte dall'utente loggato
     prenotazioni = Prenotazione.objects.filter(registrato_utente__user=request.user).order_by('data_prenotazione', 'fascia_oraria')
 
-    return render(request, 'bookings/elimina_prenotazioni.html', {'prenotazioni': prenotazioni})
+    return render(request, 'bookings/modifica_prenotazioni.html', {'prenotazioni': prenotazioni})
+
+class PrenotazioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = Prenotazione
+    form_class = PrenotazioneUpdateForm
+    template_name = 'bookings/prenotazione_update.html'
+    context_object_name = 'prenotazione'
+
+    def get_success_url(self):
+        return reverse_lazy('bookings:success_page')

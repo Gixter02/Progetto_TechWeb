@@ -31,7 +31,7 @@ class Prenotazione(models.Model):
     fascia_oraria = models.IntegerField(choices=ORARI_FASCIA)
     data_prenotazione = models.DateField()
 
-    def clean(self):
+    def clean(self, registrato_utente=None):
         # Controlla se la prenotazione è per una data nel passato o per oggi
         if self.data_prenotazione <= timezone.now().date():
             raise ValidationError(
@@ -43,7 +43,9 @@ class Prenotazione(models.Model):
                 fascia_oraria=self.fascia_oraria,
                 data_prenotazione=self.data_prenotazione
         ).exists():
-            raise ValidationError("Il personal trainer ha già una prenotazione per questa fascia oraria.")
+            if not Prenotazione.objects.filter(registrato_utente=self.registrato_utente).exists():
+                raise ValidationError("Il personal trainer ha già una prenotazione per questa fascia oraria.")
+
 
     def __str__(self):
         return f"Prenotazione di {self.registrato_utente.user.username} con {self.personal_trainer.nome} alle {self.get_fascia_oraria_display()} del {self.data_prenotazione}"

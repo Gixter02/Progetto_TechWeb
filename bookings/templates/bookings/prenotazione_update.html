@@ -1,0 +1,16 @@
+{% extends 'bookings/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Modifica Prenotazione</h2>
+
+    <p><strong>Nota:</strong> Puoi modificare solo le richieste specifiche. Se desideri cambiare la data, l'orario o il Personal Trainer, dovrai eliminare la prenotazione e crearne una nuova.</p>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Salva modifiche</button>
+      <a href="{% url 'bookings:modifica_prenotazioni' %}" class="btn btn-secondary">Annulla</a>
+    </form>
+  </div>
+{% endblock %}

@@ -16,3 +16,8 @@ class PrenotazioneForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         # Impostazione per personalizzare il campo 'personal_trainer'
         self.fields['personal_trainer'].queryset = PersonalTrainer.objects.all()
+
+class PrenotazioneUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Prenotazione
+        fields = ['richieste_specifiche']  # Solo questo campo può essere modificato

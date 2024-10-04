@@ -21,7 +21,8 @@
               <td>{{ prenotazione.data_prenotazione }}</td>
               <td>{{ prenotazione.get_fascia_oraria_display }}</td>
               <td>
-                <a href="{% url 'bookings:prenotazione_delete' prenotazione.pk %}" class="btn btn-danger">Cancella</a>
+                  <a href="{% url 'bookings:prenotazione_update' prenotazione.pk %}" class="btn btn-warning">Modifica</a>
+                  <a href="{% url 'bookings:prenotazione_delete' prenotazione.pk %}" class="btn btn-danger">Cancella</a>
               </td>
             </tr>
           {% endfor %}
@@ -31,6 +32,6 @@
       <p>Non hai prenotazioni attive.</p>
     {% endif %}
     
-    <a href="{% url 'bookings:home_page' %}" class="btn btn-primary">Torna alla Home</a>
+    <a href="{% url 'bookings:home_page' %}" class="btn btn-primary">Torna alle Prenotazioni</a>
   </div>
 {% endblock %}
