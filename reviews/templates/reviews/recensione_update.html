@@ -1,0 +1,17 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Modifica Recensione</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Salva modifiche</button>
+      <a href="{% url 'reviews:lista_recensioni' %}" class="btn btn-secondary">Annulla</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

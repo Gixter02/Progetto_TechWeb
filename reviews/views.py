@@ -4,14 +4,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, UpdateView
 
 from accounts.models import RegistratoUtente
 from reviews.forms import RecensioneForm
 from reviews.models import Recensione
 from trainers.models import PersonalTrainer
 
-
+from django.utils.timezone import now
 
 # Create your views here.
 
@@ -73,3 +74,15 @@ class ReviewListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(registrato_utente__user=self.request.user)
+
+class RecensioneUpdateView(UpdateView):
+    model = Recensione
+    template_name = 'reviews/recensione_update.html'
+    fields = ['recensione_testuale', 'voto']
+    context_object_name = 'recensione'
+    success_url = reverse_lazy('reviews:review_success')
+
+    def form_valid(self, form):
+        # Aggiorna la data della recensione
+        form.instance.data_recensione = now()
+        return super().form_valid(form)

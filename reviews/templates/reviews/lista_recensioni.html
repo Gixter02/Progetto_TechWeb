@@ -25,6 +25,9 @@
             <strong>Recensione:</strong> {{ recensione.recensione_testuale }}<br>
             <small class="text-muted">Data: {{ recensione.data_recensione|date:"d/m/Y H:i" }}</small>
           </p>
+           <a href="{% url 'reviews:recensione_update' recensione.pk %}" class="btn btn-primary btn-sm">
+            Modifica
+          </a>
         </div>
       {% endfor %}
     </div>
