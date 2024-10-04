@@ -5,7 +5,7 @@ from django.db import IntegrityError
 
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView
+from django.views.generic import ListView, UpdateView, DeleteView
 
 from accounts.models import RegistratoUtente
 from reviews.forms import RecensioneForm
@@ -75,7 +75,7 @@ class ReviewListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         return queryset.filter(registrato_utente__user=self.request.user)
 
-class RecensioneUpdateView(UpdateView):
+class RecensioneUpdateView(LoginRequiredMixin, UpdateView):
     model = Recensione
     template_name = 'reviews/recensione_update.html'
     fields = ['recensione_testuale', 'voto']
@@ -86,3 +86,8 @@ class RecensioneUpdateView(UpdateView):
         # Aggiorna la data della recensione
         form.instance.data_recensione = now()
         return super().form_valid(form)
+
+class RecensioneDeleteView(LoginRequiredMixin, DeleteView):
+    model = Recensione
+    template_name = 'reviews/confirm_delete.html'
+    success_url = reverse_lazy('reviews:review_success')

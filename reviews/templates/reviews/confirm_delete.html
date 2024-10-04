@@ -1,0 +1,14 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Conferma eliminazione</h2>
+  <p>Sei sicuro di voler eliminare la recensione per {{ object.personal_trainer.nome }} {{ object.personal_trainer.cognome }}?</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sì, elimina</button>
+    <a href="{% url 'reviews:lista_recensioni' %}" class="btn btn-secondary">Annulla</a>
+  </form>
+</div>
+{% endblock %}
