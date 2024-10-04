@@ -1,0 +1,36 @@
+{% extends 'reviews/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Recensioni fatte da {{ user.username }}</h2>
+
+  {% if object_list %}
+    <div class="list-group">
+      {% for recensione in object_list %}
+        <div class="list-group-item">
+          <h5 class="mb-1">Recensione per {{ recensione.personal_trainer.nome }} {{ recensione.personal_trainer.cognome }}</h5>
+          <p class="mb-1">
+            <strong>Voto:</strong>
+                            {{ recensione.voto }} / 5
+                            <!-- Visualizzazione delle stelle per il voto della singola recensione -->
+                            <span>
+                                {% for i in "12345" %}
+                                    {% if i <= recensione.voto|floatformat %}
+                                        <i class="fas fa-star text-warning"></i> <!-- Stella piena -->
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i> <!-- Stella vuota -->
+                                    {% endif %}
+                                {% endfor %}
+                            </span><br>
+            <strong>Recensione:</strong> {{ recensione.recensione_testuale }}<br>
+            <small class="text-muted">Data: {{ recensione.data_recensione|date:"d/m/Y H:i" }}</small>
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Non ci sono recensioni disponibili.</p>
+  {% endif %}
+  
+</div>
+{% endblock %}

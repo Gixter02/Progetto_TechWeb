@@ -1,11 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 
 from django.shortcuts import render, redirect
+from django.views.generic import ListView
 
 from accounts.models import RegistratoUtente
 from reviews.forms import RecensioneForm
+from reviews.models import Recensione
 from trainers.models import PersonalTrainer
 
 
@@ -62,3 +65,11 @@ def crea_recensione(request):
 
 def review_success(request):
     return render(request, 'reviews/success.html')
+
+class ReviewListView(LoginRequiredMixin, ListView):
+    model = Recensione
+    template_name = 'reviews/lista_recensioni.html'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(registrato_utente__user=self.request.user)
