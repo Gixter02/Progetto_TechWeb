@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 # Create your views here.
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DeleteView, UpdateView
 

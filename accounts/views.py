@@ -1,10 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 from django.shortcuts import render, redirect
-from django.contrib import messages
 
 from bookings.models import Prenotazione
 from .models import RegistratoUtente
@@ -15,9 +14,12 @@ from .froms import RegistratoUtenteForm
 def home_accounts(request):
     return render(request, template_name= "accounts/home_page.html")
 
-class ListaUtentiView(ListView):
+class ListaUtentiView(UserPassesTestMixin, ListView):
     model = RegistratoUtente
     template_name = "accounts/listautenti.html"
+    def test_func(self):
+        # Verifica se l'utente è un amministratore
+        return self.request.user.is_staff
 
 class CreaUtenteView(CreateView):
     model = RegistratoUtente
