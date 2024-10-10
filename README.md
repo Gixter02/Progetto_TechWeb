@@ -59,7 +59,7 @@ Avviare il server di sviluppo:
 
     python manage.py runserver
 
-    Accedere all'applicazione all'indirizzo http://localhost:8000.
+Accedere all'applicazione all'indirizzo http://localhost:8000.
 
 ## Testing
 
