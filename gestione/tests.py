@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from gestione.models import RichiestaPersonalTrainer
 from trainers.models import PersonalTrainer
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from datetime import timedelta
+
 
 class GestioneViewsTestCase(TestCase):
     def setUp(self):
@@ -126,3 +129,99 @@ class GestioneViewsTestCase(TestCase):
 
         # Verifichiamo che il nome della richiesta sia visualizzato
         self.assertContains(response, self.richiesta.nome)
+
+
+class RichiestaPersonalTrainerModelTest(TestCase):
+
+    def setUp(self):
+        # Crea un utente di base per i test
+        self.user1 = User.objects.create_user(username='utente1', password='testpass')
+        self.user2 = User.objects.create_user(username='utente2', password='testpass')
+
+    def test_crea_richiesta_success(self):
+        # Crea una richiesta valida
+        richiesta = RichiestaPersonalTrainer.objects.create(
+            user=self.user1,
+            nome='Mario',
+            cognome='Rossi',
+            data_di_nascita=timezone.now().date() - timedelta(days=8000),
+            bio='Esperto in bodybuilding',
+            preferenze='BB',
+            competenze='Sollevamento pesi'
+        )
+
+        # Verifica che la richiesta sia stata creata correttamente
+        self.assertEqual(richiesta.user, self.user1)
+        self.assertEqual(richiesta.nome, 'Mario')
+        self.assertEqual(richiesta.cognome, 'Rossi')
+        self.assertEqual(richiesta.bio, 'Esperto in bodybuilding')
+        self.assertEqual(richiesta.preferenze, 'BB')
+        self.assertEqual(richiesta.competenze, 'Sollevamento pesi')
+        self.assertFalse(richiesta.approvato)
+
+    def test_richiesta_fail_manca_nome(self):
+        # Prova a creare una richiesta senza il nome
+        with self.assertRaises(ValidationError):
+            richiesta = RichiestaPersonalTrainer(
+                user=self.user1,
+                cognome='Rossi',
+                data_di_nascita=timezone.now().date() - timedelta(days=8000),
+                bio='Esperto in bodybuilding',
+                preferenze='BB',
+                competenze='Sollevamento pesi'
+            )
+            richiesta.full_clean()  # Deve sollevare ValidationError
+
+    def test_richiesta_fail_manca_cognome(self):
+        # Prova a creare una richiesta senza il cognome
+        with self.assertRaises(ValidationError):
+            richiesta = RichiestaPersonalTrainer(
+                user=self.user1,
+                nome='Mario',
+                data_di_nascita=timezone.now().date() - timedelta(days=8000),
+                bio='Esperto in bodybuilding',
+                preferenze='BB',
+                competenze='Sollevamento pesi'
+            )
+            richiesta.full_clean()  # Deve sollevare ValidationError
+
+    def test_richiesta_fail_manca_preferenze(self):
+        # Prova a creare una richiesta senza preferenze
+        with self.assertRaises(ValidationError):
+            richiesta = RichiestaPersonalTrainer(
+                user=self.user1,
+                nome='Mario',
+                cognome='Rossi',
+                data_di_nascita=timezone.now().date() - timedelta(days=8000),
+                bio='Esperto in bodybuilding',
+                competenze='Sollevamento pesi'
+            )
+            richiesta.full_clean()  # Deve sollevare ValidationError
+
+    def test_richiesta_fail_data_nascita_futura(self):
+        # Prova a creare una richiesta con una data di nascita futura
+        data_futura = timezone.now().date() + timedelta(days=10)
+        with self.assertRaises(ValidationError):
+            richiesta = RichiestaPersonalTrainer(
+                user=self.user1,
+                nome='Mario',
+                cognome='Rossi',
+                data_di_nascita=data_futura,
+                bio='Esperto in bodybuilding',
+                preferenze='BB',
+                competenze='Sollevamento pesi'
+            )
+            richiesta.full_clean()  # Deve sollevare ValidationError
+
+    def test_str_representation(self):
+        # Verifica la rappresentazione in stringa del modello RichiestaPersonalTrainer
+        richiesta = RichiestaPersonalTrainer.objects.create(
+            user=self.user1,
+            nome='Mario',
+            cognome='Rossi',
+            data_di_nascita=timezone.now().date() - timedelta(days=8000),
+            bio='Esperto in bodybuilding',
+            preferenze='BB',
+            competenze='Sollevamento pesi'
+        )
+        self.assertEqual(str(richiesta), f"Richiesta di {self.user1.username}")

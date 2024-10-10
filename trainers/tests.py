@@ -5,6 +5,9 @@ from trainers.models import PersonalTrainer
 from accounts.models import RegistratoUtente
 from bookings.models import Prenotazione
 from django.utils import timezone
+from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
+from django.core.exceptions import ValidationError
 
 class PersonalTrainerUpdateViewTest(TestCase):
 
@@ -82,3 +85,146 @@ class ElencoPersonalTrainersTest(TestCase):
         response = self.client.get(reverse('trainers:elenco_personal_trainers_ordinato'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Mario Rossi')
+
+
+class PersonalTrainerModelTest(TestCase):
+    def setUp(self):
+        # Creiamo un utente di base per associare al PersonalTrainer
+        self.user = User.objects.create_user(username='testuser', password='12345')
+
+        # Creiamo un oggetto PersonalTrainer per i test
+        self.personal_trainer = PersonalTrainer.objects.create(
+            user=self.user,
+            nome="Mario",
+            cognome="Rossi",
+            bio="Esperto in fitness e body building",
+            competenze="BodyBuilding, PowerLifting",
+            preferenze="BB",
+            data_di_nascita=timezone.now().date(),
+        )
+
+    def test_personal_trainer_creation(self):
+        # Verifichiamo che il PersonalTrainer sia stato creato correttamente
+        personal_trainer = PersonalTrainer.objects.get(user=self.user)
+        self.assertEqual(personal_trainer.nome, 'Mario')
+        self.assertEqual(personal_trainer.cognome, 'Rossi')
+        self.assertEqual(personal_trainer.bio, 'Esperto in fitness e body building')
+        self.assertEqual(personal_trainer.competenze, 'BodyBuilding, PowerLifting')
+        self.assertEqual(personal_trainer.preferenze, 'BB')
+
+    def test_update_personal_trainer(self):
+        # Modifichiamo l'oggetto PersonalTrainer
+        self.personal_trainer.nome = 'Luca'
+        self.personal_trainer.cognome = 'Bianchi'
+        self.personal_trainer.bio = 'Esperto in yoga'
+        self.personal_trainer.save()
+
+        # Verifichiamo che le modifiche siano salvate correttamente
+        updated_personal_trainer = PersonalTrainer.objects.get(user=self.user)
+        self.assertEqual(updated_personal_trainer.nome, 'Luca')
+        self.assertEqual(updated_personal_trainer.cognome, 'Bianchi')
+        self.assertEqual(updated_personal_trainer.bio, 'Esperto in yoga')
+
+    def test_delete_personal_trainer(self):
+        # Verifichiamo che l'oggetto PersonalTrainer sia eliminabile
+        self.personal_trainer.delete()
+
+        # Verifichiamo che l'oggetto sia stato eliminato
+        personal_trainer_exists = PersonalTrainer.objects.filter(user=self.user).exists()
+        self.assertFalse(personal_trainer_exists)
+
+    def test_personal_trainer_str_representation(self):
+        # Verifichiamo che la rappresentazione `__str__` restituisca il nome e cognome corretti
+        self.assertEqual(str(self.personal_trainer), f'{self.personal_trainer.nome} {self.personal_trainer.cognome} - Preferenza: {self.personal_trainer.get_preferenze_display()}')
+
+
+class PersonalTrainerModelFailureTest(TestCase):
+    def setUp(self):
+        # Creiamo un utente di base
+        self.user = User.objects.create_user(username='testuser', password='12345')
+
+    def test_creation_without_nome(self):
+        with self.assertRaises(ValidationError):
+            pt = PersonalTrainer(
+                user=self.user,
+                cognome="Rossi",
+                bio="Esperto in fitness",
+                competenze="BodyBuilding",
+                preferenze="BB",
+                data_di_nascita=timezone.now().date(),
+            )
+            pt.full_clean()  # Solleva un ValidationError a causa del campo mancante 'nome'
+            pt.save()  # Non dovrebbe mai arrivare a questa linea
+
+    def test_creation_without_cognome(self):
+        # Proviamo a creare un PersonalTrainer senza cognome (campo obbligatorio)
+        with self.assertRaises(ValidationError):
+            pt = PersonalTrainer.objects.create(
+                user=self.user,
+                nome="Mario",
+                bio="Esperto in fitness",
+                competenze="BodyBuilding",
+                preferenze="BB",
+                data_di_nascita=timezone.now().date(),
+            )
+            pt.full_clean()  # Solleva un ValidationError a causa del campo mancante 'cognome'
+            pt.save()  # Non dovrebbe mai arrivare a questa linea
+
+    def test_creation_without_bio(self):
+        # Verifichiamo che un PersonalTrainer possa essere creato con una bio vuota
+        # Se il campo `bio` è obbligatorio, questo test fallirà. Se è facoltativo, sarà creato con bio vuota.
+        personal_trainer = PersonalTrainer.objects.create(
+            user=self.user,
+            nome="Mario",
+            cognome="Rossi",
+            bio="",
+            competenze="BodyBuilding",
+            preferenze="BB",
+            data_di_nascita=timezone.now().date(),
+        )
+        self.assertEqual(personal_trainer.bio, "")
+
+    def test_creation_with_invalid_preferenze(self):
+        # Proviamo a creare un PersonalTrainer con un valore non valido nel campo 'preferenze'
+        with self.assertRaises(ValidationError):
+            pt = PersonalTrainer.objects.create(
+                user=self.user,
+                nome="Mario",
+                cognome="Rossi",
+                bio="Esperto in fitness",
+                competenze="BodyBuilding",
+                preferenze="XX",  # Valore non valido
+                data_di_nascita=timezone.now().date(),
+            )
+            pt.full_clean()  # Solleva un ValidationError a causa del campo errato 'preferenze'
+            pt.save()  # Non dovrebbe mai arrivare a questa linea
+
+    def test_update_with_invalid_data(self):
+        # Creiamo un oggetto PersonalTrainer valido
+        personal_trainer = PersonalTrainer.objects.create(
+            user=self.user,
+            nome="Mario",
+            cognome="Rossi",
+            bio="Esperto in fitness",
+            competenze="BodyBuilding",
+            preferenze="BB",
+            data_di_nascita=timezone.now().date(),
+        )
+
+        # Proviamo a modificarlo con un cognome vuoto (campo obbligatorio)
+        personal_trainer.cognome = ""
+        with self.assertRaises(ValidationError):
+            personal_trainer.full_clean()
+            personal_trainer.save()
+
+    def test_creation_without_user(self):
+        # Proviamo a creare un PersonalTrainer senza un utente associato (campo obbligatorio)
+        with self.assertRaises(IntegrityError):
+            PersonalTrainer.objects.create(
+                nome="Mario",
+                cognome="Rossi",
+                bio="Esperto in fitness",
+                competenze="BodyBuilding",
+                preferenze="BB",
+                data_di_nascita=timezone.now().date(),
+            )

@@ -5,6 +5,7 @@ from accounts.models import RegistratoUtente
 from trainers.models import PersonalTrainer
 from reviews.models import Recensione
 from datetime import date
+from django.core.exceptions import ValidationError
 
 
 class TestRecensioniViews(TestCase):
@@ -130,3 +131,106 @@ class TestRecensioniViews(TestCase):
         # Verifica che la recensione sia stata cancellata
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Recensione.objects.filter(id=self.recensione.id).count(), 0)
+
+class RecensioneModelTest(TestCase):
+
+    def setUp(self):
+        # Crea due utenti di base e personal trainer per i test
+        self.user1 = User.objects.create_user(username='utente1', password='testpass')
+        self.user2 = User.objects.create_user(username='utente2', password='testpass')
+
+        self.registrato_utente1 = RegistratoUtente.objects.create(
+            user=self.user1,
+            nome="Mario",
+            cognome="Rossi",
+            data_nascita="1990-01-01",
+            bio="Appassionato di fitness"
+        )
+
+        self.personal_trainer1 = PersonalTrainer.objects.create(
+            user=self.user2,
+            nome="Luigi",
+            cognome="Verdi",
+            data_di_nascita="1985-01-01",
+            bio="Esperto in powerlifting",
+            preferenze="PL"
+        )
+
+    def test_crea_recensione_success(self):
+        # Crea una recensione valida
+        recensione = Recensione.objects.create(
+            registrato_utente=self.registrato_utente1,
+            personal_trainer=self.personal_trainer1,
+            recensione_testuale="Ottimo allenatore, molto preparato.",
+            voto=5
+        )
+
+        # Verifica che la recensione sia stata creata correttamente
+        self.assertEqual(recensione.registrato_utente, self.registrato_utente1)
+        self.assertEqual(recensione.personal_trainer, self.personal_trainer1)
+        self.assertEqual(recensione.recensione_testuale, "Ottimo allenatore, molto preparato.")
+        self.assertEqual(recensione.voto, 5)
+        self.assertIsNotNone(recensione.data_recensione)
+
+    def test_recensione_fail_manca_testo(self):
+        # Prova a creare una recensione senza il campo testo
+        with self.assertRaises(ValidationError):
+            recensione = Recensione(
+                registrato_utente=self.registrato_utente1,
+                personal_trainer=self.personal_trainer1,
+                voto=4
+            )
+            recensione.full_clean()  # Deve sollevare ValidationError
+
+    def test_recensione_fail_manca_voto(self):
+        # Prova a creare una recensione senza il campo voto
+        with self.assertRaises(ValidationError):
+            recensione = Recensione(
+                registrato_utente=self.registrato_utente1,
+                personal_trainer=self.personal_trainer1,
+                recensione_testuale="Molto bravo."
+            )
+            recensione.full_clean()  # Deve sollevare ValidationError
+
+    def test_recensione_fail_voto_fuori_intervallo(self):
+        # Prova a creare una recensione con un voto fuori dal range 1-5
+        with self.assertRaises(ValidationError):
+            recensione = Recensione(
+                registrato_utente=self.registrato_utente1,
+                personal_trainer=self.personal_trainer1,
+                recensione_testuale="Molto bravo.",
+                voto=6  # Fuori dall'intervallo 1-5
+            )
+            recensione.full_clean()  # Deve sollevare ValidationError
+
+    def test_unique_recensione_per_trainer(self):
+        # Crea una recensione valida
+        Recensione.objects.create(
+            registrato_utente=self.registrato_utente1,
+            personal_trainer=self.personal_trainer1,
+            recensione_testuale="Molto bravo.",
+            voto=5
+        )
+
+        # Prova a creare un'altra recensione per lo stesso personal trainer dallo stesso utente
+        with self.assertRaises(ValidationError):
+            recensione_duplicata = Recensione(
+                registrato_utente=self.registrato_utente1,
+                personal_trainer=self.personal_trainer1,
+                recensione_testuale="Ancora meglio la seconda volta.",
+                voto=4
+            )
+            recensione_duplicata.full_clean()  # Deve sollevare ValidationError per il vincolo di unicità
+
+    def test_str_representation(self):
+        # Verifica la rappresentazione in stringa del modello Recensione
+        recensione = Recensione.objects.create(
+            registrato_utente=self.registrato_utente1,
+            personal_trainer=self.personal_trainer1,
+            recensione_testuale="Ottimo allenatore, molto preparato.",
+            voto=5
+        )
+        self.assertEqual(
+            str(recensione),
+            f"Recensione di {self.registrato_utente1} per {self.personal_trainer1} - 5 stelle"
+        )

@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from accounts.models import RegistratoUtente
 from bookings.models import Prenotazione
 from datetime import date
-
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 from trainers.models import PersonalTrainer
 
 
@@ -144,3 +145,105 @@ class TestAccountsViews(TestCase):
         self.assertEqual(self.registrato_utente.cognome, 'Bianchi')
         self.assertEqual(self.registrato_utente.bio, 'Aggiornato')
 
+
+class RegistratoUtenteModelTest(TestCase):
+
+    def setUp(self):
+        # Crea un utente di base per i test
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+
+    def test_crea_registrato_utente_success(self):
+        # Crea un RegistratoUtente con dati validi
+        registrato_utente = RegistratoUtente.objects.create(
+            user=self.user,
+            nome='Mario',
+            cognome='Rossi',
+            data_nascita=timezone.now().date(),
+            bio='Sono un appassionato di fitness',
+            preferenze='BB'  # BodyBuilding
+        )
+
+        # Verifica che l'oggetto sia stato creato correttamente
+        self.assertEqual(registrato_utente.nome, 'Mario')
+        self.assertEqual(registrato_utente.cognome, 'Rossi')
+        self.assertEqual(registrato_utente.bio, 'Sono un appassionato di fitness')
+        self.assertEqual(registrato_utente.preferenze, 'BB')
+        self.assertEqual(registrato_utente.user.username, 'testuser')
+
+    def test_registrato_utente_creation_fails_without_nome(self):
+        # Verifica che la creazione fallisca senza il campo 'nome'
+        with self.assertRaises(ValidationError):
+            registrato_utente = RegistratoUtente(
+                user=self.user,
+                cognome='Rossi',
+                data_nascita=timezone.now().date(),
+                bio='Sono un appassionato di fitness',
+                preferenze='BB'
+            )
+            registrato_utente.full_clean()  # Questo deve sollevare un ValidationError
+            registrato_utente.save()  # Non deve arrivare a questo punto
+
+    def test_registrato_utente_creation_fails_without_cognome(self):
+        # Verifica che la creazione fallisca senza il campo 'cognome'
+        with self.assertRaises(ValidationError):
+            registrato_utente = RegistratoUtente(
+                user=self.user,
+                nome='Mario',
+                data_nascita=timezone.now().date(),
+                bio='Sono un appassionato di fitness',
+                preferenze='BB'
+            )
+            registrato_utente.full_clean()  # Questo deve sollevare un ValidationError
+            registrato_utente.save()
+
+    def test_registrato_utente_creation_fails_without_data_nascita(self):
+        # Verifica che la creazione fallisca senza il campo 'data_nascita'
+        with self.assertRaises(ValidationError):
+            registrato_utente = RegistratoUtente(
+                user=self.user,
+                nome='Mario',
+                cognome='Rossi',
+                bio='Sono un appassionato di fitness',
+                preferenze='BB'
+            )
+            registrato_utente.full_clean()  # Questo deve sollevare un ValidationError
+            registrato_utente.save()
+
+    def test_registrato_utente_creation_fails_without_bio(self):
+        # Verifica che la creazione fallisca senza il campo 'bio'
+        with self.assertRaises(ValidationError):
+            registrato_utente = RegistratoUtente(
+                user=self.user,
+                nome='Mario',
+                cognome='Rossi',
+                data_nascita=timezone.now().date(),
+                preferenze='BB'
+            )
+            registrato_utente.full_clean()  # Questo deve sollevare un ValidationError
+            registrato_utente.save()
+
+    def test_registrato_utente_creation_fails_without_preferenze(self):
+        # Verifica che la creazione fallisca senza il campo 'preferenze'
+        with self.assertRaises(ValidationError):
+            registrato_utente = RegistratoUtente(
+                user=self.user,
+                nome='Mario',
+                cognome='Rossi',
+                data_nascita=timezone.now().date(),
+                bio='Sono un appassionato di fitness',
+            )
+            registrato_utente.full_clean()  # Questo deve sollevare un ValidationError
+            registrato_utente.save()
+
+    def test_registrato_utente_str_representation(self):
+        # Testa la rappresentazione in stringa del modello
+        registrato_utente = RegistratoUtente.objects.create(
+            user=self.user,
+            nome='Mario',
+            cognome='Rossi',
+            data_nascita=timezone.now().date(),
+            bio='Sono un appassionato di fitness',
+            preferenze='BB'
+        )
+        self.assertEqual(str(registrato_utente),
+                         f'Mario Rossi nato il {registrato_utente.data_nascita}\nPreferenze: BB\nBIO: Sono un appassionato di fitness')

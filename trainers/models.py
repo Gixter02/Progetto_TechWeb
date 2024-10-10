@@ -1,5 +1,7 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Funzione per definire il percorso dinamico per l'immagine del profilo
 def foto_profilo_upload_path(instance, filename):
@@ -27,6 +29,12 @@ class PersonalTrainer(models.Model):
     # Campo immagine del profilo con percorso dinamico
     immagine_profilo = models.ImageField(upload_to=foto_profilo_upload_path, blank=True, null=True)
     competenze = models.TextField(max_length=500, default='Nessuna competenza')
+
+    def clean(self):
+        # Controlla se la data di nascita è nel passato
+        if self.data_di_nascita >= timezone.now().date():
+            raise ValidationError(
+                "Non puoi inserire una data di nascita nel futuro.")
 
     def __str__(self):
         return f"{self.nome} {self.cognome} - Preferenza: {self.get_preferenze_display()}"

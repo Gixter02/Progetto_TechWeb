@@ -1,8 +1,7 @@
-from datetime import timezone
-
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
-
+from django.utils import timezone
 from accounts.models import RegistratoUtente
 
 
@@ -36,6 +35,12 @@ class RichiestaPersonalTrainer(models.Model):
     competenze = models.TextField(max_length=500, default='Nessuna competenza')
     data_richiesta = models.DateTimeField(auto_now_add=True)
     approvato = models.BooleanField(default=False)
+
+    def clean(self):
+        # Controlla se la data di nascita è nel passato
+        if self.data_di_nascita >= timezone.now().date():
+            raise ValidationError(
+                "Non puoi inserire una data di nascita nel futuro.")
 
     def __str__(self):
         return f"Richiesta di {self.user.username}"
