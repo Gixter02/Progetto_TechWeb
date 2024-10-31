@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import dashboard_amministratore, approva_personal_trainer, elimina_personal_trainer, \
     richiesta_personal_trainer, rifiuta_personal_trainer, RichiestaDetailView, SuccessPageView
 
@@ -14,3 +16,6 @@ urlpatterns = [
     path('success/', SuccessPageView.as_view(), name='success'),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

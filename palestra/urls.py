@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from .initcmds import *
 from palestra.views import homepage_palestra
 
 urlpatterns = [
@@ -28,3 +28,5 @@ urlpatterns = [
     path('reviews/', include('reviews.urls')),
     path('gestione/', include('gestione.urls')),
 ]
+
+erase_old_bookings()
