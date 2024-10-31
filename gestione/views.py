@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, TemplateView
@@ -92,9 +91,9 @@ def search_registrato_utente(request):
     results = []
 
     if query:
-        results = RegistratoUtente.objects.filter(
-            Q(nome__icontains=query) | Q(cognome__icontains=query)
-        )
+        nome = RegistratoUtente.objects.filter(nome__icontains=query)
+        cognome = RegistratoUtente.objects.filter(cognome__icontains=query)
+        results = nome | cognome
 
     return render(request, 'gestione/search_registrato_utente.html', {
         'results': results,
