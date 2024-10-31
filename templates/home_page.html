@@ -16,9 +16,10 @@
             <li><strong>Facilità di Prenotazione:</strong> Grazie al nostro sistema di prenotazione online, puoi pianificare facilmente i tuoi allenamenti in base ai tuoi impegni. Scegli il tuo trainer e la specialità che preferisci, e inizia a lavorare verso i tuoi obiettivi.</li>
             <li><strong>Ambiente Inclusivo e Accogliente:</strong> Alla <strong>Palestra XYZ</strong>, promuoviamo un'atmosfera di rispetto e inclusività, dove ognuno può sentirsi a proprio agio nel perseguire i propri obiettivi di benessere.</li>
         </ul>
-
+        {% if not user.is_authenticated %}
         <h2>Unisciti a Noi Oggi!</h2>
         <p>Inizia il tuo viaggio verso una vita più sana e attiva con noi. <a href="{% url 'accounts:creautente' %}">Iscriviti</a> oggi e scopri tutto ciò che la <strong>Palestra XYZ</strong> ha da offrire. Non vediamo l'ora di accoglierti nella nostra community!</p>
+        {% endif %}
     </div>
     <h2 class="mt-5">Scegli la sezione che desideri visitare:</h2>
 

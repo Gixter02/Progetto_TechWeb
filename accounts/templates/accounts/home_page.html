@@ -117,15 +117,6 @@
         </div>
     {% endif %}
 
-    <!-- Sezione per i personal trainer -->
-    <div class="text-center mt-5">
-        <h3>Sezione Allenatori</h3>
-        {% if user.is_authenticated %}
-            <a href="{% url 'trainers:elenco_personal_trainers_ordinato' %}" class="btn btn-primary btn-lg mt-3">Vai ai Personal Trainer</a>
-            <p class="text-muted">Scopri i profili dei nostri allenatori disponibili.</p>
-        {% endif %}
-    </div>
-
     {% endif %}
 </div>
 {% endblock %}
