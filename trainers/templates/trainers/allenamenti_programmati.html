@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">I tuoi allenamenti programmati</h2>
+    <h2 class="text-center mb-4">I tuoi prossimi allenamenti programmati</h2>
 
     {% if allenamenti %}
         <div class="table-responsive">
@@ -29,7 +29,7 @@
         </div>
     {% else %}
         <div class="alert alert-warning" role="alert">
-            Non hai allenamenti programmati.
+            Non hai allenamenti programmati nei prossimi 7 giorni.
         </div>
     {% endif %}
 </div>

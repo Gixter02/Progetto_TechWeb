@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import redirect, render, get_object_or_404
@@ -57,7 +59,7 @@ def allenamenti_programmati(request):
         return redirect('personal_trainer_home')
 
     # Ottieni tutte le prenotazioni future per questo personal trainer
-    allenamenti = Prenotazione.objects.filter(personal_trainer=personal_trainer).order_by('data_prenotazione', 'fascia_oraria')
+    allenamenti = Prenotazione.objects.filter(personal_trainer=personal_trainer, data_prenotazione__lt= timezone.now().date() + timedelta(days=7)).order_by('data_prenotazione', 'fascia_oraria')
 
     return render(request, 'trainers/allenamenti_programmati.html', {'allenamenti': allenamenti})
 
