@@ -2,50 +2,55 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h1 class="text-center mb-4">
-        {% if object %}
-            Modifica il tuo profilo
-        {% else %}
-            Crea il tuo profilo
-        {% endif %}
-    </h1>
     <center>
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="card">
+        <div class="card-header">
+            <h3>Profilo</h3>
+        </div>
+            <div class="card-body">
+                <h4 class="card-title">
+                    {% if object %}
+                        Modifica il tuo profilo
+                    {% else %}
+                        Crea il tuo profilo
+                    {% endif %}
+                </h4>
             <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                 {% csrf_token %}
 
-                <div class="mb-3">
+                <div class="mx-auto">
                     <label for="{{ form.nome.id_for_label }}" class="form-label">{{ form.nome.label }}</label>
                     {{ form.nome }}
                 </div>
-                <div class="mb-3">
+                <div class="mx-auto">
                     <label for="{{ form.cognome.id_for_label }}" class="form-label">{{ form.cognome.label }}</label>
                     {{ form.cognome }}
                 </div>
-                <div class="mb-3">
+                <div class="mx-auto">
                     <label for="{{ form.data_di_nascita.id_for_label }}" class="form-label">{{ form.data_di_nascita.label }}</label>
                     {{ form.data_di_nascita }}
                 </div>
-                <div class="mb-3">
+                <div class="mx-auto">
                     <label for="{{ form.preferenze.id_for_label }}" class="form-label">{{ form.preferenze.label }}</label>
                     {{ form.preferenze }}
                 </div>
-                <div class="mb-3">
+                <div class="mx-auto">
                     <label for="{{ form.bio.id_for_label }}" class="form-label">{{ form.bio.label }}</label>
                     {{ form.bio }}
                 </div>
-                <div class="mb-3">
+                <div class="mx-auto">
                     <label for="{{ form.competenze.id_for_label }}" class="form-label">{{ form.competenze.label }}</label>
                     {{ form.competenze }}
                 </div>
-                <div class="mb-3">
+                <div class="mx-auto">
                     <label for="{{ form.immagine_profilo.id_for_label }}" class="form-label">{{ form.immagine_profilo.label }}</label>
                     {{ form.immagine_profilo }}
                 </div>
-
-                <button type="submit" class="btn btn-primary w-100">Salva</button>
+                <br>
+                <button type="submit" class="btn btn-success">Salva</button> <a href="{% url 'trainers:personal_trainer_home' %}" class="btn btn-primary">Annulla</a>
             </form>
+        </div>
         </div>
     </div>
         </center>
