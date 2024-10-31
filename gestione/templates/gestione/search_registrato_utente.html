@@ -27,5 +27,10 @@
     {% elif query %}
         <p class="mt-4">Nessun utente trovato con nome "{{ query }}"</p>
     {% endif %}
+<div>
+    <br>
+    <a href="{% url 'gestione:dashboard_amministratore' %}" class="btn btn-primary">Torna alla dashboard</a>
+    </div>
 </div>
+
 {% endblock %}
