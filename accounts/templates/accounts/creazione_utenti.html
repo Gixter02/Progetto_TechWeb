@@ -1,15 +1,22 @@
 {% extends "accounts/base.html" %}
 {% block title %} Creazione Utente {% endblock %}
 
-{% block header1 %}
+
+
+{% block content %}
+
+    {% block header1 %}
   <div class="container text-center mt-5">
     <h1 class="mb-3">Pagina di Registrazione</h1>
     <p>Si prega di compilare i campi necessari</p>
   </div>
 {% endblock %}
 
-{% block content %}
-<div class="container mt-4">
+<div class="card text-center">
+  <div class="card-header center">
+      <h3>Crea il tuo profilo</h3>
+  </div>
+  <div class="card-body">
   <form method="post" class="mx-auto" style="max-width: 600px;">
     {% csrf_token %}
 
@@ -19,7 +26,10 @@
     </div>
 
     <!-- Bottone di submit con Bootstrap -->
-    <button type="submit" class="btn btn-primary w-100">Registrati</button>
+    <button type="submit" class="btn btn-primary">Registrati</button> <a href="{% url 'accounts:home_accounts' %}" class="btn btn-secondary"> Annulla </a>
+
   </form>
+  </div>
 </div>
+
 {% endblock %}

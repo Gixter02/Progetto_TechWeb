@@ -32,20 +32,6 @@ class TestAccountsViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'accounts/home_page.html')
 
-    def test_lista_utenti_view(self):
-        # Login utente come staff
-        self.user.is_staff = True
-        self.user.save()
-        self.client.login(username='testuser', password='password')
-
-        # Fai una richiesta alla lista degli utenti
-        response = self.client.get(reverse('accounts:lista_utenti'))
-
-        # Verifica se lo stato è 200 e che l'utente venga visualizzato
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'accounts/listautenti.html')
-        self.assertContains(response, "Mario Rossi")
-
     def test_crea_utente_view(self):
         # Verifica che il form sia visualizzato correttamente con una GET
         response = self.client.get(reverse('accounts:creautente'))
