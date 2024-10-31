@@ -33,6 +33,9 @@
   {% else %}
     <p>Non ci sono recensioni disponibili.</p>
   {% endif %}
-  
+  <div>
+      <br>
+    <a href="{% url 'reviews:homepage_recensioni' %}" class="btn btn-primary">Sezione Recensioni</a>
+    </div>
 </div>
 {% endblock %}
