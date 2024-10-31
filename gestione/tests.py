@@ -1,11 +1,13 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
+
+from accounts.models import RegistratoUtente
 from gestione.models import RichiestaPersonalTrainer
 from trainers.models import PersonalTrainer
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from datetime import timedelta
+from datetime import timedelta, date
 
 
 class GestioneViewsTestCase(TestCase):
@@ -107,6 +109,26 @@ class GestioneViewsTestCase(TestCase):
 
         # Verifichiamo che il PersonalTrainer sia stato eliminato
         self.assertFalse(PersonalTrainer.objects.filter(pk=personal_trainer.pk).exists())
+
+    def test_elimina_account_view(self):
+        self.registrato_utente = RegistratoUtente.objects.create(
+            user=self.user,
+            nome="Mario",
+            cognome="Rossi",
+            data_nascita=date(1990, 1, 1),
+            bio="Appassionato di fitness",
+            preferenze="BB"
+        )
+        # Autenticazione come utente staff
+        self.client.login(username='staffuser', password='12345')
+
+        # Verifichiamo che la view di eliminazione funzioni
+        response = self.client.post(reverse('gestione:elimina_account', kwargs={'pk': self.registrato_utente.pk}))
+        # Verifichiamo il redirect alla pagina di successo
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('gestione:success'))
+        self.assertFalse(RegistratoUtente.objects.filter(pk=self.registrato_utente.pk).exists())
+        self.assertEqual(User.objects.count(), 1)
 
     def test_dashboard_amministratore_view(self):
         # Autenticazione come utente staff

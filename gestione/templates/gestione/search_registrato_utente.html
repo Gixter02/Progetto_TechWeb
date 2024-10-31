@@ -1,0 +1,31 @@
+{% extends "gestione/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Ricerca Utente per Nome o Cognome</h2>
+    
+    <form method="get" action="{% url 'gestione:search_registrato_utente' %}">
+        <div class="input-group mb-3">
+            <input type="text" name="query" class="form-control" placeholder="Inserisci il nome" value="{{ query }}">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Cerca</button>
+            </div>
+        </div>
+    </form>
+    
+    {% if results %}
+        <ul class="list-group mt-4">
+            {% for registratoutente in results %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ registratoutente.nome }} {{ registratoutente.cognome }} - Preferenze: {{ registratoutente.preferenze }}                  <div>
+                <a href="{% url 'accounts:profilo' registratoutente.pk %}" class="btn btn-primary mt-1">Dettagli</a>
+                <a href="{% url 'gestione:elimina_account' registratoutente.pk %}" class="btn btn-danger mt-1">Elimina</a>
+                  </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif query %}
+        <p class="mt-4">Nessun utente trovato con nome "{{ query }}"</p>
+    {% endif %}
+</div>
+{% endblock %}

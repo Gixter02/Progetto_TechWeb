@@ -61,6 +61,10 @@ class RegistraoUtenteUpdateView(LoginRequiredMixin, UpdateView):
     form_class = RegistratoUtenteForm
     template_name = 'accounts/edit_registrato_utente.html'
 
+    def get_queryset(self):
+        # Permette solo al personal trainer autenticato di aggiornare i propri dati
+        return RegistratoUtente.objects.filter(user=self.request.user)
+
     def get_success_url(self):
         pk = self.get_context_data()["object"].pk
         return reverse('accounts:profilo', kwargs={'pk': pk})

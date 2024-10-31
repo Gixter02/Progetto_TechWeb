@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView, TemplateView
 
+from accounts.models import RegistratoUtente
 from trainers.models import PersonalTrainer
 from .forms import RichiestaPersonalTrainerForm
 from .models import RichiestaPersonalTrainer
@@ -49,6 +51,13 @@ def rifiuta_personal_trainer(request, pk):
     return redirect('gestione:success')
 
 @staff_member_required
+def elimina_account(request, pk):
+    account = get_object_or_404(RegistratoUtente, pk=pk)
+    account.user.delete()
+    account.delete()
+    return redirect('gestione:success')
+
+@staff_member_required
 def elimina_personal_trainer(request, pk):
     personal_trainer = get_object_or_404(PersonalTrainer, pk=pk)
     personal_trainer.delete()
@@ -61,6 +70,35 @@ def dashboard_amministratore(request):
     return render(request, 'gestione/dashboard_amministratore.html', {
         'richieste': richieste,
         'personal_trainers': personal_trainers
+    })
+
+@staff_member_required
+def richiesta_list_view(request):
+    richieste = RichiestaPersonalTrainer.objects.filter(approvato=False)
+    return render(request, 'gestione/lista_richieste_personal_trainer.html', {
+        'richieste': richieste
+    })
+
+@staff_member_required
+def personal_trainer_list_view(request):
+    personal_trainers = PersonalTrainer.objects.all()
+    return render(request, 'gestione/lista_personal_trainer.html', {
+        'personal_trainers': personal_trainers
+    })
+
+@staff_member_required
+def search_registrato_utente(request):
+    query = request.GET.get('query', '')
+    results = []
+
+    if query:
+        results = RegistratoUtente.objects.filter(
+            Q(nome__icontains=query) | Q(cognome__icontains=query)
+        )
+
+    return render(request, 'gestione/search_registrato_utente.html', {
+        'results': results,
+        'query': query
     })
 
 class RichiestaDetailView(UserPassesTestMixin, DetailView):
